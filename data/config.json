@@ -1,0 +1,10 @@
+{
+  "port": 5555,
+  "db": {
+    "host": "localhost",
+    "port": 27017,
+    "name": "expense-manager",
+    "username": "",
+    "password": ""
+  }
+}

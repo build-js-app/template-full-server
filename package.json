@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "private": true,
+  "scripts": {},
+  "author": "Yegor Sytnyk",
+  "license": "ISC",
+  "dependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/fs-extra": "0.0.37",
+    "@types/node": "^7.0.0",
+    "axios": "^0.15.2",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-alpha.2",
+    "cors": "^2.8.1",
+    "date-fns": "^1.27.1",
+    "express": "^4.14.0",
+    "fs-extra": "^2.0.0",
+    "handlebars": "^4.0.6",
+    "joi": "^10.2.0",
+    "lodash": "^4.16.5",
+    "mongoose": "^4.7.7",
+    "morgan": "^1.7.0",
+    "winston": "^2.3.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "tslint": "^4.4.2",
+    "typescript": "^2.1.5"
+  }
+}
