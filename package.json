@@ -4,6 +4,9 @@
   "scripts": {},
   "author": "Yegor Sytnyk",
   "license": "ISC",
+  "globalDependencies": {
+    "typescript": "2.2.1"
+  },
   "dependencies": {
     "@types/chai": "^3.4.34",
     "@types/fs-extra": "0.0.37",
@@ -23,10 +26,5 @@
     "mongoose": "^4.7.7",
     "morgan": "^1.7.0",
     "winston": "^2.3.0"
-  },
-  "devDependencies": {
-    "chai": "^3.5.0",
-    "tslint": "^4.4.2",
-    "typescript": "^2.1.5"
   }
 }
