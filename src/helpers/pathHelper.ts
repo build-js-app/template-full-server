@@ -16,9 +16,6 @@ let profileData = {
     }
 };
 
-//TODO for simplicity the same profile data for dev/prod
-profileData.production = profileData.development;
-
 let rootPath = getRootPath();
 
 export default {
