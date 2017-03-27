@@ -8,7 +8,8 @@ export default {
     sendData,
     sendFailureMessage,
     loadSchema,
-    sendActivationEmail
+    sendActivationEmail,
+    sendResetPasswordEmail
 };
 
 function sendFailureMessage(error, res) {
@@ -81,6 +82,18 @@ function sendActivationEmail(email, token) {
     };
 
     return emailHelper.sendEmailTemplate('activation', data, {
+        to: email,
+        from: config.email.fromNoReply
+    });
+}
+
+function sendResetPasswordEmail(email, token) {
+    let data = {
+        token,
+        siteRootUrl: config.rootUrl
+    };
+
+    return emailHelper.sendEmailTemplate('password_reset', data, {
         to: email,
         from: config.email.fromNoReply
     });

@@ -23,6 +23,9 @@ function initRoutes(app) {
     helper.post('/api/sign-up', authController.signUpPost, {auth: false});
     helper.post('/api/login', authController.loginPost, {auth: false});
     helper.post('/api/logout', authController.logOut, {auth: false});
+    helper.post('/api/password-forgot', authController.forgotPassword, {auth: false});
+    helper.get('/api/password-reset/:token', authController.resetPassword, {auth: false});
+    helper.post('/api/password-reset/:token', authController.resetPasswordPost, {auth: false});
     helper.get('/activate/:token', authController.activate, {auth: false});
 
     //all other routes are rendered as home (for client side routing)
