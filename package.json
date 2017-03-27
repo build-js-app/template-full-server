@@ -1,7 +1,10 @@
 {
   "name": "server",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "nodemon --exec ts-node -- ./src/index.ts"
+  },
   "author": "Yegor Sytnyk",
   "license": "ISC",
   "globalDependencies": {
