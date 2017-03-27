@@ -7,12 +7,17 @@ let config = {
     isDevLocal: process.env.NODE_ENV !== 'production',
     appVersion: '0.0.1',
     parseServerUrl: '???',
+    rootUrl: 'http://localhost:3000',
     db: {
         host: 'localhost',
         port: 27017,
         name: 'expense-manager',
         username: '',
         password: ''
+    },
+    email: {
+        useStubs: false,
+        fromNoReply: 'noreply@buildapp.com'
     }
 };
 

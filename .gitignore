@@ -1,3 +1,5 @@
 build
 local/logs
+local/emails
 node_modules
+local/config.local.json

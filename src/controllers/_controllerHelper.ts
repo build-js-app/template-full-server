@@ -1,10 +1,14 @@
 import * as _ from 'lodash';
 import * as Joi from 'joi';
 
+import config from '../config';
+import emailHelper from '../helpers/emailHelper';
+
 export default {
     sendData,
     sendFailureMessage,
-    loadSchema
+    loadSchema,
+    sendActivationEmail
 };
 
 function sendFailureMessage(error, res) {
@@ -67,5 +71,17 @@ function loadSchema(data, schema): Promise<any> {
 
             return reject(error);
         });
+    });
+}
+
+function sendActivationEmail(email, token) {
+    let data = {
+        token,
+        siteRootUrl: config.rootUrl
+    };
+
+    return emailHelper.sendEmailTemplate('activation', data, {
+        to: email,
+        from: config.email.fromNoReply
     });
 }

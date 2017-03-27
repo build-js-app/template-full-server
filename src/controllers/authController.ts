@@ -1,7 +1,10 @@
 import * as bcrypt from 'bcrypt-nodejs';
+import * as Joi from 'joi';
+
+const crypto = require('crypto');
+
 import helper from './_controllerHelper';
 import userRepository from '../repositories/userRepository';
-import * as Joi from 'joi';
 import AppError from '../appError';
 
 export default {
@@ -26,6 +29,8 @@ async function signUpPost(req, res) {
         }
 
         let data = await userRepository.addUser(userData);
+
+        await helper.sendActivationEmail(data.email, generateActivationToken());
 
         return helper.sendData(data, res);
     } catch (err) {
@@ -74,4 +79,10 @@ async function logOut(req, res) {
     } catch (err) {
         helper.sendFailureMessage(err, res);
     }
+}
+
+//helper methods
+function generateActivationToken(): string {
+    let token = crypto.randomBytes(32).toString('hex');
+    return token;
 }
