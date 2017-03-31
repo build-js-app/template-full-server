@@ -158,7 +158,12 @@ async function resetPassword(req, res) {
 
         let localUser = await getUserByResetToken(token);
 
-        return helper.sendData({}, res);
+        let data = {
+            email: localUser.email,
+            token: token
+        };
+
+        return helper.sendData(data, res);
 
     } catch (err) {
         helper.sendFailureMessage(err, res);
@@ -167,12 +172,18 @@ async function resetPassword(req, res) {
 
 async function resetPasswordPost(req, res) {
     try {
-        let token = req.body.token;
-        let password = req.body.password;
+        let data = await helper.loadSchema(req.body, {
+            email: Joi.string().email().required(),
+            password: Joi.string().required(),
+            confirmPassword: Joi.string().required(),
+            token: Joi.string().required()
+        });
 
-        let localUser = await getUserByResetToken(token);
+        if (data.password !== data.confirmPassword) throw new AppError('Passwords do not match.');
 
-        await userRepository.updateUserPassword(localUser.id, password);
+        let localUser = await getUserByResetToken(data.token);
+
+        await userRepository.updateUserPassword(localUser.id, data.password);
 
         let message = 'Your password was reset successfully.';
 

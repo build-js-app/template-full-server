@@ -38,6 +38,14 @@ let schema = new mongoose.Schema({
                 created: {
                     type: Date
                 }
+            },
+            reset: {
+                token: {
+                    type: String
+                },
+                created: {
+                    type: Date
+                }
             }
         },
         google: {
