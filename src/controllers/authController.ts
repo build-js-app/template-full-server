@@ -100,13 +100,20 @@ async function logOut(req, res) {
 
 async function activate(req, res) {
     try {
-        let token = req.params.token;
+        let data = {};
 
-        if (!token) throw new AppError('No activation token provided.');
+        let token = req.params.token;
 
         let localUser = await userRepository.getUserByActivationToken(token);
 
-        if (!localUser) throw new AppError('Wrong activation token.');
+        if (!localUser) {
+            data = {
+                message: 'Wrong activation token.',
+                status: 'error'
+            };
+
+            return helper.sendData(data, res);
+        }
 
         let activationTime = localUser.profile.local.activation.created;
         let isTokenExpired = dateFns.differenceInHours(activationTime, new Date()) > 24;
@@ -116,12 +123,22 @@ async function activate(req, res) {
 
             await helper.sendActivationEmail(user.email, user.profile.local.activation.token);
 
-            throw new AppError('Activation token has expired. New activation email was send.');
+            data = {
+                message: 'Activation token has expired. New activation email was send.',
+                status: 'warning'
+            };
+
+            return helper.sendData(data, res);
         } else {
             await userRepository.activateUser(localUser.id);
-        }
 
-        return res.redirect('/');
+            data = {
+                message: 'Your account was successfully activated.',
+                status: 'success'
+            };
+
+            return helper.sendData(data, res);
+        }
     } catch (err) {
         return helper.sendFailureMessage(err, res);
     }
@@ -146,7 +163,6 @@ async function forgotPassword(req, res) {
         let message = `We've just dropped you an email. Please check your mail to reset your password. Thanks!`;
 
         return helper.sendData({message}, res);
-
     } catch (err) {
         helper.sendFailureMessage(err, res);
     }
