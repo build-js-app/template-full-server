@@ -31,9 +31,10 @@
     "handlebars": "^4.0.6",
     "joi": "^10.2.0",
     "lodash": "^4.16.5",
-    "mongoose": "^4.7.7",
     "morgan": "^1.7.0",
     "nodemailer": "^3.1.8",
+    "pg": "^6.1.5",
+    "sequelize": "^3.30.4",
     "winston": "^2.3.0"
   }
 }

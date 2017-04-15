@@ -1,66 +1,34 @@
-import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt-nodejs';
 
-let schema = new mongoose.Schema({
-    email: {
-        type: String,
-        required: true,
-        index: { unique: true }
-    },
-    profile: {
-        local: {
-            firstName: {
-                type: String,
-                required: true
-            },
-            lastName: {
-                type: String,
-                required: true
-            },
-            email: {
-                type: String,
-                required: true,
-                index: { unique: true }
-            },
-            password: {
-                type: String,
-                required: true
-            },
-            isActivated: {
-                type: Boolean,
-                required: true,
-                default: false
-            },
-            activation: {
-                token: {
-                    type: String
-                },
-                created: {
-                    type: Date
-                }
-            },
-            reset: {
-                token: {
-                    type: String
-                },
-                created: {
-                    type: Date
-                }
-            }
-        },
-        google: {
+import helper from '../modelHelper';
 
+export function init(sequelize, DataTypes) {
+    let fields = {
+        _id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
         },
-        facebook: {
-
+        email: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false,
+            validate: { isEmail: true }
+        },
+        profile: {
+            type: DataTypes.JSON //local, google, facebook
         }
-    }
+    };
 
-});
+    let options = {
+        classMethods: {
+            generateHash(password) {
+                return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+            },
+        }
+    };
 
-// generating a hash
-schema.methods.generateHash = function (password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
+    let model = helper.defineModel('user', fields, options, sequelize);
 
-module.exports = mongoose.model('User', schema);
+    return model;
+}

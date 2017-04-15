@@ -1,54 +1,47 @@
-import * as mongoose from 'mongoose';
-import * as _ from 'lodash';
 import config from '../config';
-import logger from '../logger';
+const Sequelize = require('sequelize');
+const path = require('path');
+const models = require('./models/index');
 
-let db = null;
-let models = {
-    User: null,
-    Record: null,
-    Category: null
-};
+interface Db {
+    sequelize: any,
+    models: any
+}
+
+interface DbConnectionOptions {
+    dbPath?: string,
+    dbName?: string
+}
 
 export default {
-    init,
-    models
+    init
+};
+
+function init(connectionOptions?: DbConnectionOptions): Db {
+    const sequelize = getConnection(connectionOptions);
+    const dbModels = models.init(sequelize);
+
+    return {
+        sequelize,
+        models: dbModels
+    };
 }
 
-async function init() {
-    mongoose.Promise = Promise;
+function getConnection(connectionOptions: DbConnectionOptions) {
+    let options = {
+        dialect: 'postgres',
+        host: config.db.host,
+        pool: {
+            max: 5,
+            min: 0,
+            idle: 10000
+        },
+        define: {
+            timestamps: false
+        },
+        //logging: console.log
+        logging: false,
+    };
 
-    let connectionStr = getConnectionString();
-
-    try {
-        await mongoose.connect(connectionStr, {
-            server: {
-                socketOptions: {
-                    connectionTimeout: 5000
-                }
-            }
-        });
-    } catch (err) {
-        console.error('Could not connect to MongoDB!');
-        logger.error(err);
-    }
-
-    //init models
-    for (let modelName of Object.keys(models)) {
-        let model = require(`./models/${_.lowerCase(modelName)}`);
-
-        models[modelName] = model;
-    }
-}
-
-function getConnectionString() {
-    let result = 'mongodb://';
-
-    if (config.db.username) {
-        result += config.db.username + ':' + config.db.password + '@';
-    }
-
-    result += config.db.host + ':' + config.db.port + '/' + config.db.name;
-
-    return result;
+    return new Sequelize(config.db.name, config.db.username, config.db.password, options);
 }

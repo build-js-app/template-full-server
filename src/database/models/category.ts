@@ -1,18 +1,35 @@
-import * as mongoose from 'mongoose';
+import helper from '../modelHelper';
 
-let schema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    },
-    userId: {
-        type: String,
-        required: true
-    }
-});
+export function init(sequelize, DataTypes) {
+    let fields = {
+        _id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        title: {
+            type: DataTypes.STRING
+        },
+        description: {
+            type: DataTypes.TEXT
+        },
+        userId: {
+            type: DataTypes.INTEGER
+        }
+    };
 
-module.exports = mongoose.model('Category', schema);
+    let options = {
+        classMethods: {
+            associate: function (models) {
+                model.hasMany(models.Record, {
+                    foreignKey: helper.defineForeignKey('categoryId'),
+                    onDelete: 'no action'
+                });
+            }
+        }
+    };
+
+    let model = helper.defineModel('category', fields, options, sequelize);
+
+    return model;
+}

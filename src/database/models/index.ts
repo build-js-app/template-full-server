@@ -1,0 +1,29 @@
+import * as _ from 'lodash';
+const Sequelize = require('sequelize');
+
+const models = [
+    require('./category'),
+    require('./record'),
+    require('./user')
+];
+
+module.exports = {
+    init: initModels
+};
+
+function initModels(sequelize) {
+    let result = {};
+
+    _.forEach(models, modelInit => {
+        let model = modelInit.init(sequelize, Sequelize);
+        result[_.upperFirst(model.name)] = model;
+    });
+
+    _.forEach(_.keys(result), modelName => {
+        if (result[modelName].associate) {
+            result[modelName].associate(result);
+        }
+    });
+
+    return result;
+}

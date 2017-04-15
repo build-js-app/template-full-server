@@ -2,10 +2,11 @@ import * as _ from 'lodash';
 
 const crypto = require('crypto');
 
-import db from '../database/database';
+import dbInit from '../database/database';
 import AppError from '../appError';
 
 export default {
+    init,
     getUserByEmail,
     getLocalUserByEmail,
     saveLocalAccount,
@@ -22,10 +23,21 @@ export default {
     refreshResetToken
 }
 
-async function getUserByEmail(email) {
-    let User = db.models.User;
+const db = dbInit.init();
+let userModel = db.models.User;
 
-    return User.findOne({email});
+function init(db) {
+    userModel = db.models.User;
+}
+
+async function getUserByEmail(email) {
+    let options = {
+        where: {
+            email
+        }
+    };
+
+    return await userModel.findOne(options);
 }
 
 async function getLocalUserByEmail(email: string) {
@@ -39,14 +51,12 @@ async function getLocalUserByEmail(email: string) {
 }
 
 async function saveLocalAccount(user, userData) {
-    let User = db.models.User;
-
     let localProfile: any = {};
 
     localProfile.firstName = userData.firstName;
     localProfile.lastName = userData.lastName;
     localProfile.email = userData.email;
-    localProfile.password = new User().generateHash(userData.password);
+    localProfile.password = userModel.generateHash(userData.password);
 
     let activationToken = generateActivationToken();
     localProfile.activation = {
@@ -62,7 +72,7 @@ async function saveLocalAccount(user, userData) {
 
         return await user.save();
     } else {
-        return User.create({
+        return userModel.create({
             email: userData.email,
             profile: {
                 local: localProfile
@@ -72,15 +82,11 @@ async function saveLocalAccount(user, userData) {
 }
 
 async function getUserById(id) {
-    let User = db.models.User;
-
-    return User.findById(id);
+    return await userModel.findById(id);
 }
 
-function getUsers() {
-    let User = db.models.User;
-
-    return User.find();
+async function getUsers() {
+    return userModel.findAll();
 }
 
 async function getUserByActivationToken(token: string) {
@@ -121,18 +127,20 @@ async function activateUser(userId: number) {
 async function updateUser(userData) {
     let user = await getUserByEmail(userData.email.toLowerCase());
 
-    if (!user) return;
+    if (!user) throw new AppError('Cannot find user by Id');
 
     user.firstName = userData.firstName;
     user.lastName = userData.lastName;
 
-    return user.save();
+    return await user.save();
 }
 
-function removeUser(id) {
-    let User = db.models.User;
+async function removeUser(id) {
+    let user = await getUserById(id);
 
-    return User.remove({_id: id});
+    if (!user) throw new AppError('Cannot find user by Id');
+
+    return await user.destroy();
 }
 
 async function resetPassword(userId: number) {

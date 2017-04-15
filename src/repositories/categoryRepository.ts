@@ -1,6 +1,9 @@
-import db from '../database/database';
+import * as _ from 'lodash';
+
+import dbInit from '../database/database';
 
 export default {
+    init,
     getCategoryById,
     getCategories,
     addCategory,
@@ -8,45 +11,48 @@ export default {
     removeCategory
 }
 
-function getCategoryById(id) {
-    let Category = db.models.Category;
+const db = dbInit.init();
+let categoryModel = db.models.Category;
 
-    return Category.findById(id);
+function init(db) {
+    categoryModel = db.models.Category;
 }
 
-function getCategories(userId) {
-    let Category = db.models.Category;
+async function getCategoryById(id) {
+    return await categoryModel.findById(id);
+}
 
-    let query = {
-        userId: userId
+async function getCategories(userId) {
+    let options = {
+        where: {
+            userId: userId
+        }
     };
 
-    return Category.find(query).sort({title: 1});
+    let categories = await categoryModel.findAll(options);
+
+    return _.sortBy(categories, 'title');
 }
 
-function addCategory(userId, category) {
-    let Category = db.models.Category;
-
+async function addCategory(userId, category) {
     category.userId = userId;
 
-    return Category.create(category);
+    return categoryModel.create(category);
 }
 
 async function updateCategory(categoryData) {
-    let Category = db.models.Category;
-
-    let category = await Category.findOne({_id: categoryData._id});
+    let category = await categoryModel.findById(categoryData._id);
 
     if (!category) return;
 
     category.title = categoryData.title;
     category.description = categoryData.description;
 
-    return category.save();
+    return await category.save();
 }
 
-function removeCategory(id) {
-    let Category = db.models.Category;
+async function removeCategory(id) {
+    let category = await categoryModel.findById(id);
 
-    return Category.remove({_id: id});
+    return await category.destroy();
 }

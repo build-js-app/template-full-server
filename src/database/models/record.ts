@@ -1,26 +1,38 @@
-import * as mongoose from 'mongoose';
+import helper from '../modelHelper';
 
-let schema = new mongoose.Schema({
-    date: {
-        type: Date,
-        required: true
-    },
-    cost: {
-        type: Number,
-        required: true
-    },
-    note: {
-        type: String,
-        required: true
-    },
-    categoryId: {
-        type: String,
-        required: true
-    },
-    userId: {
-        type: String,
-        required: true
-    }
-});
+export function init(sequelize, DataTypes) {
+    let fields = {
+        _id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        date: {
+            type: DataTypes.DATE
+        },
+        cost: {
+            type: DataTypes.FLOAT
+        },
+        note: {
+            type: DataTypes.TEXT
+        },
+        userId: {
+            type: DataTypes.INTEGER
+        }
+    };
 
-module.exports = mongoose.model('Record', schema);
+    let options = {
+        classMethods: {
+            associate: function (models) {
+                model.belongsTo(models.Category, {
+                    foreignKey: helper.defineForeignKey('categoryId'),
+                    onDelete: 'no action'
+                });
+            }
+        }
+    };
+
+    let model = helper.defineModel('record', fields, options, sequelize);
+
+    return model;
+}

@@ -3,7 +3,7 @@
   "rootUrl": "http://localhost:5000",
   "db": {
     "host": "localhost",
-    "port": 27017,
+    "port": 5432,
     "name": "expense-manager",
     "username": "",
     "password": ""

@@ -1,6 +1,9 @@
-import db from '../database/database';
+import * as _ from 'lodash';
+
+import dbInit from '../database/database';
 
 export default {
+    init,
     getRecords,
     getRecordById,
     addRecord,
@@ -9,38 +12,37 @@ export default {
     getRecordsByCategoryId
 }
 
-function getRecords(userId, searchQuery) {
-    let Record = db.models.Record;
+const db = dbInit.init();
+let recordModel = db.models.Record;
 
-    let query: any = {
-        userId: userId
+function init(db) {
+    recordModel = db.models.Record;
+}
+
+async function getRecords(userId, searchQuery) {
+    let options = {
+        where: {
+            userId: userId
+        }
     };
 
-    let sort = {};
+    let records = await recordModel.findAll(options);
 
-    sort[searchQuery.sortBy] = 1;
-
-    return Record.find(query).sort(sort);
+    return _.sortBy(records, searchQuery.sortBy);
 }
 
-function getRecordById(id) {
-    let Record = db.models.Record;
-
-    return Record.findById(id);
+async function getRecordById(id) {
+    return await recordModel.findById(id);
 }
 
-function addRecord(userId, record) {
-    let Record = db.models.Record;
-
+async function addRecord(userId, record) {
     record.userId = userId;
 
-    return Record.create(record);
+    return await recordModel.create(record);
 }
 
 async function updateRecord(recordData) {
-    let Record = db.models.Record;
-
-    let record = await Record.findOne({_id: recordData._id});
+    let record = await recordModel.findById(recordData._id);
 
     if (!record) return;
 
@@ -49,17 +51,23 @@ async function updateRecord(recordData) {
     record.categoryId = recordData.categoryId;
     record.note = recordData.note;
 
-    return record.save();
+    return await record.save();
 }
 
-function removeRecord(id) {
-    let Record = db.models.Record;
+async function removeRecord(id) {
+    let record =  recordModel.findById(id);
 
-    return Record.remove({_id: id});
+    if (!record) return;
+
+    return await record.destroy();
 }
 
-function getRecordsByCategoryId(categoryId) {
-    let Record = db.models.Record;
+async function getRecordsByCategoryId(categoryId) {
+    let options = {
+        where: {
+            categoryId: categoryId
+        }
+    };
 
-    return Record.find({categoryId: categoryId});
+    return await recordModel.findAll(options);
 }
