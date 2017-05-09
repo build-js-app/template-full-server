@@ -6,7 +6,7 @@ export default {
     addCategory,
     updateCategory,
     removeCategory
-}
+};
 
 function getCategoryById(id) {
     let Category = db.models.Category;
@@ -18,7 +18,7 @@ function getCategories(userId) {
     let Category = db.models.Category;
 
     let query = {
-        userId: userId
+        userId
     };
 
     return Category.find(query).sort({title: 1});

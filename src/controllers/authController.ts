@@ -14,7 +14,7 @@ export default {
     forgotPassword,
     resetPassword,
     resetPasswordPost
-}
+};
 
 async function signUpPost(req, res) {
     try {
@@ -176,7 +176,7 @@ async function resetPassword(req, res) {
 
         let data = {
             email: localUser.email,
-            token: token
+            token
         };
 
         return helper.sendData(data, res);

@@ -59,7 +59,7 @@ let schema = new mongoose.Schema({
 });
 
 // generating a hash
-schema.methods.generateHash = function (password) {
+schema.methods.generateHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 

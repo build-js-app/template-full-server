@@ -3,7 +3,7 @@ import * as fs from 'fs-extra';
 
 export default {
     renderTemplate
-}
+};
 
 let templatesCache = {};
 

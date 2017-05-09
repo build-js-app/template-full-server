@@ -58,7 +58,7 @@ function logError(error) {
 function sendData(data, res) {
     res.status(200).send({
         status: 'ok',
-        data: data
+        data
     });
 }
 
@@ -67,8 +67,8 @@ function loadSchema(data, schema): Promise<any> {
         stripUnknown: true
     };
 
-    return new Promise(function (resolve, reject) {
-        Joi.validate(data, schema, validationOptions, function (err, val) {
+    return new Promise((resolve, reject) => {
+        Joi.validate(data, schema, validationOptions, (err, val) => {
             if (!err) return resolve(val);
 
             let error = null;

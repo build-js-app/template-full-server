@@ -1,4 +1,4 @@
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
     let stack = err.stack;
     console.log(`Uncaught exception. ${err}`);
 });
@@ -12,7 +12,7 @@ async function start() {
 
     console.log(`Server is listening on port ${port}!`);
 
-    logger.info(`Server started.`)
+    logger.info(`Server started.`);
 }
 
 start();

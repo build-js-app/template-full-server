@@ -7,13 +7,13 @@ export default {
     updateRecord,
     removeRecord,
     getRecordsByCategoryId
-}
+};
 
 function getRecords(userId, searchQuery) {
     let Record = db.models.Record;
 
     let query: any = {
-        userId: userId
+        userId
     };
 
     let sort = {};
@@ -61,5 +61,5 @@ function removeRecord(id) {
 function getRecordsByCategoryId(categoryId) {
     let Record = db.models.Record;
 
-    return Record.find({categoryId: categoryId});
+    return Record.find({categoryId});
 }

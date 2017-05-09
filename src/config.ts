@@ -35,23 +35,11 @@ function tryReadConfigFile(path) {
     }
 }
 
-function loadEnvVars(config) {
-    if (process.env.PARSE_SERVER_URL) {
-        config.parseServerUrl = process.env.PARSE_SERVER_URL;
-    }
-
-    if (process.env.PARSE_APP_ID) {
-        config.parseAppId = process.env.PARSE_APP_ID;
-    }
-}
-
 let defaultFile = tryReadConfigFile(pathHelper.getDataRelative('config.json'));
 _.merge(config, defaultFile);
 
 let localFile = tryReadConfigFile(pathHelper.getLocalRelative('config.local.json'));
 _.merge(config, localFile);
-
-loadEnvVars(config);
 
 if (logConfig) {
     console.log('App configuration:');

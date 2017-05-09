@@ -1,11 +1,10 @@
 import * as dateFns from 'date-fns';
 import * as fs from 'fs-extra';
+import * as nodemailer from 'nodemailer';
+import {EmailTemplate} from 'email-templates';
 
 import pathHelper from './pathHelper';
 import config from '../config';
-
-const nodemailer = require('nodemailer');
-const EmailTemplate = require('email-templates').EmailTemplate;
 
 const emailTransport = nodemailer.createTransport({
     service: 'Gmail',
@@ -30,7 +29,7 @@ interface EmailOptions {
     html?: string
 }
 
-async function sendEmailTemplate(templateName: string, data: Object, emailData: EmailOptions) {
+async function sendEmailTemplate(templateName, data, emailData: EmailOptions) {
     try {
         let response = await renderTemplate(templateName, data);
 
@@ -42,7 +41,7 @@ async function sendEmailTemplate(templateName: string, data: Object, emailData: 
             await sendStubEmail(emailData);
         } else {
             return new Promise((resolve, reject) => {
-                emailTransport.sendMail(emailData, function (err, info) {
+                emailTransport.sendMail(emailData, (err, info) => {
                     if (err) return reject(err);
 
                     return resolve(info);
@@ -54,12 +53,12 @@ async function sendEmailTemplate(templateName: string, data: Object, emailData: 
     }
 }
 
-function renderTemplate(name: string, data: Object): Promise<any> {
+function renderTemplate(name, data): Promise<any> {
     let templateDir = pathHelper.getDataRelative('emails', name);
     let template = new EmailTemplate(templateDir);
 
     return new Promise<any>((resolve, reject) => {
-        template.render(data, function (err, result) {
+        template.render(data, (err, result) => {
             if (err) reject(err);
 
             return resolve(result);
@@ -67,9 +66,9 @@ function renderTemplate(name: string, data: Object): Promise<any> {
     });
 }
 
-function sendEmail(emailOptions: EmailOptions): Promise<Object> {
-    return new Promise<Object>((resolve, reject) => {
-        emailTransport.sendMail(emailOptions, function (error, info) {
+function sendEmail(emailOptions: EmailOptions): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+        emailTransport.sendMail(emailOptions, (error, info) => {
             if (error) return Promise.reject(error);
 
             return info;
@@ -97,6 +96,6 @@ async function sendStubEmail(mailOptions) {
 
         fs.writeFileSync(filePath, isHtml ? html : text);
     } catch (err) {
-        console.log('Cannot send stub email.')
+        console.log('Cannot send stub email.');
     }
 }

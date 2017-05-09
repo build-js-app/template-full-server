@@ -21,7 +21,7 @@ function start(port) {
 
     routes.init(app);
 
-    initErrorHandling(app);
+    initErrorHandling();
 
     db.init();
 
@@ -41,7 +41,7 @@ function initExpress() {
 
     app.use(bodyParser.json()); // get information from html forms
     app.use(bodyParser.urlencoded({extended: true}));
-    
+
     app.use('/', express.static(pathHelper.getClientRelative('/')));
 
     app.use(cors());
@@ -60,9 +60,9 @@ function initSession() {
     }));
 }
 
-function initErrorHandling(app) {
+function initErrorHandling() {
     //log unhandled errors
-    app.use(function (err, req, res, next) {
+    app.use((err, req, res, next) => {
         logger.error(err);
 
         console.log(err);

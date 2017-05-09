@@ -13,7 +13,7 @@ let models = {
 export default {
     init,
     models
-}
+};
 
 async function init() {
     mongoose.Promise = Promise;

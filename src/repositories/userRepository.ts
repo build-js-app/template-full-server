@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
-
-const crypto = require('crypto');
+import * as crypto from 'crypto';
 
 import db from '../database/database';
 import AppError from '../appError';
@@ -20,7 +19,7 @@ export default {
     updateUserPassword,
     getUserByResetToken,
     refreshResetToken
-}
+};
 
 async function getUserByEmail(email) {
     let User = db.models.User;

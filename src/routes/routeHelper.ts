@@ -7,7 +7,7 @@ export default {
     put: putRout,
     post: postRout,
     delete: deleteRout
-}
+};
 
 function init(expressApp) {
     app = expressApp;
@@ -16,25 +16,25 @@ function init(expressApp) {
 function getRout(route, handler, options = {}) {
     let handlers = getHandlers(handler, options);
 
-    app.get(route, handlers)
+    app.get(route, handlers);
 }
 
 function putRout(route, handler, options = {}) {
     let handlers = getHandlers(handler, options);
 
-    app.put(route, handlers)
+    app.put(route, handlers);
 }
 
 function postRout(route, handler, options = {}) {
     let handlers = getHandlers(handler, options);
 
-    app.post(route, handlers)
+    app.post(route, handlers);
 }
 
 function deleteRout(route, handler, options = {}) {
     let handlers = getHandlers(handler, options);
 
-    app.delete(route, handlers)
+    app.delete(route, handlers);
 }
 
 function getHandlers(handler, options) {

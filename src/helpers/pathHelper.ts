@@ -26,15 +26,15 @@ export default {
 };
 
 function getDataRelativePath(...paths) {
-    return getRelativePath('data', ...paths)
+    return getRelativePath('data', ...paths);
 }
 
 function getLocalRelativePath(...paths) {
-    return getRelativePath('local', ...paths)
+    return getRelativePath('local', ...paths);
 }
 
 function getClientRelativePath(...paths) {
-    return getRelativePath('client', ...paths)
+    return getRelativePath('client', ...paths);
 }
 
 function getRelativePath(profileFolder, ...paths: string[]) {
@@ -53,7 +53,7 @@ function getRootPath() {
     if (path.extname(__filename) === '.ts') {
         profileData.development.root = '../..';
     }
-    
+
     let rootRelative = profileData[getCurrentProfile()].root;
 
     if (!rootRelative) throw Error('Cannot find root folder');
