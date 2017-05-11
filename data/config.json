@@ -5,8 +5,8 @@
     "host": "localhost",
     "port": 5432,
     "name": "expense-manager",
-    "username": "",
-    "password": ""
+    "username": "admin",
+    "password": "password123"
   },
   "email": {
     "fromNoReply": "noreply@buildapp.com"

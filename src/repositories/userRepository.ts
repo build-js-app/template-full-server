@@ -92,7 +92,7 @@ async function getUsers() {
 async function getUserByActivationToken(token: string) {
     let users = await getUsers();
 
-    let findUser = _.find(users, (user) => {
+    let findUser = _.find(users, (user: any) => {
         return user.profile.local &&
             user.profile.local.activation.token === token;
     });
@@ -170,7 +170,7 @@ async function updateUserPassword(userId: number, password: string) {
 async function getUserByResetToken(token: string) {
     let users = await getUsers();
 
-    let findUser = _.find(users, (user) => {
+    let findUser = _.find(users, (user: any) => {
         return user.profile.local && user.profile.local.reset.token === token;
     });
 

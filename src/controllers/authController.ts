@@ -104,7 +104,7 @@ async function activate(req, res) {
 
         let token = req.params.token;
 
-        let localUser = await userRepository.getUserByActivationToken(token);
+        let localUser: any = await userRepository.getUserByActivationToken(token);
 
         if (!localUser) {
             data = {
@@ -172,7 +172,7 @@ async function resetPassword(req, res) {
     try {
         let token = req.params.token;
 
-        let localUser = await getUserByResetToken(token);
+        let localUser: any = await getUserByResetToken(token);
 
         let data = {
             email: localUser.email,
@@ -197,7 +197,7 @@ async function resetPasswordPost(req, res) {
 
         if (data.password !== data.confirmPassword) throw new AppError('Passwords do not match.');
 
-        let localUser = await getUserByResetToken(data.token);
+        let localUser: any = await getUserByResetToken(data.token);
 
         await userRepository.updateUserPassword(localUser.id, data.password);
 
@@ -212,7 +212,7 @@ async function resetPasswordPost(req, res) {
 async function getUserByResetToken(token) {
     if (!token) throw new AppError('No reset token provided.');
 
-    let localUser = await userRepository.getUserByResetToken(token);
+    let localUser: any = await userRepository.getUserByResetToken(token);
 
     if (!localUser) throw new AppError('Wrong reset password token.');
 
