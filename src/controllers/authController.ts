@@ -78,8 +78,6 @@ async function loginPost(req, res) {
             throw new AppError('The email address or password that you entered is not valid');
         }
 
-        user = user.toObject();
-
         req.session.user = user;
 
         return helper.sendData(user, res);

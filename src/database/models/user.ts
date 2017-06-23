@@ -25,6 +25,17 @@ export function init(sequelize, DataTypes) {
             generateHash(password) {
                 return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
             },
+            associate: function (models) {
+                model.hasMany(models.Record, {
+                    foreignKey: helper.defineForeignKey('userId'),
+                    onDelete: 'no action'
+                });
+
+                model.hasMany(models.Category, {
+                    foreignKey: helper.defineForeignKey('userId'),
+                    onDelete: 'no action'
+                });
+            }
         }
     };
 

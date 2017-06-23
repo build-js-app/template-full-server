@@ -28,6 +28,11 @@ export function init(sequelize, DataTypes) {
                     foreignKey: helper.defineForeignKey('categoryId'),
                     onDelete: 'no action'
                 });
+
+                model.belongsTo(models.User, {
+                    foreignKey: helper.defineForeignKey('userId'),
+                    onDelete: 'no action'
+                });
             }
         }
     };
