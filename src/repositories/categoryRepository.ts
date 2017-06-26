@@ -37,11 +37,11 @@ async function getCategories(userId) {
 async function addCategory(userId, category) {
     category.userId = userId;
 
-    return categoryModel.create(category);
+    return await categoryModel.create(category);
 }
 
 async function updateCategory(categoryData) {
-    let category = await categoryModel.findById(categoryData._id);
+    let category = await categoryModel.findById(categoryData.id);
 
     if (!category) return;
 

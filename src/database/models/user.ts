@@ -4,7 +4,7 @@ import helper from '../modelHelper';
 
 export function init(sequelize, DataTypes) {
     let fields = {
-        _id: {
+        id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true

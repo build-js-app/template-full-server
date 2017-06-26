@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "_id": 1,
+      "id": 1,
       "email": "test@gmail.com",
       "profile": {
         "local": {
@@ -15,7 +15,7 @@
   ],
   "records": [
     {
-      "_id": 1,
+      "id": 1,
       "date": "10/06/2017",
       "cost": 20.2,
       "note": "some note",
@@ -23,7 +23,7 @@
       "categoryId": 1
     },
     {
-      "_id": 2,
+      "id": 2,
       "date": "10/07/2017",
       "cost": 200,
       "note": "some note",
@@ -31,7 +31,7 @@
       "categoryId": 1
     },
     {
-      "_id": 3,
+      "id": 3,
       "date": "10/08/2017",
       "cost": 111.2,
       "note": "some note",
@@ -41,13 +41,13 @@
   ],
   "categories": [
     {
-      "_id": 1,
+      "id": 1,
       "title": "First Cat",
       "description": "First Cat Description",
       "userId": 1
     },
     {
-      "_id": 2,
+      "id": 2,
       "title": "Second Cat",
       "description": "Second Cat Description",
       "userId": 1

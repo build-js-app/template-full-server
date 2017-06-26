@@ -42,7 +42,7 @@ async function addRecord(userId, record) {
 }
 
 async function updateRecord(recordData) {
-    let record = await recordModel.findById(recordData._id);
+    let record = await recordModel.findById(recordData.id);
 
     if (!record) return;
 
@@ -55,7 +55,7 @@ async function updateRecord(recordData) {
 }
 
 async function removeRecord(id) {
-    let record =  recordModel.findById(id);
+    let record =  await recordModel.findById(id);
 
     if (!record) return;
 

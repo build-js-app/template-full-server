@@ -72,7 +72,7 @@ async function saveLocalAccount(user, userData) {
 
         return await user.save();
     } else {
-        return userModel.create({
+        return await userModel.create({
             email: userData.email,
             profile: {
                 local: localProfile
@@ -86,7 +86,7 @@ async function getUserById(id) {
 }
 
 async function getUsers() {
-    return userModel.findAll();
+    return await userModel.findAll();
 }
 
 async function getUserByActivationToken(token: string) {

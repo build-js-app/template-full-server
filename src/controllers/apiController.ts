@@ -18,7 +18,7 @@ export default {
 
 async function getCurrentUser(req, res) {
     try {
-        let userId = req.session.user._id;
+        let userId = req.session.user.id;
 
         let user = await userRepository.getUserById(userId);
 
@@ -30,7 +30,7 @@ async function getCurrentUser(req, res) {
 
 async function categoriesList(req, res) {
     try {
-        let userId = req.session.user._id;
+        let userId = req.session.user.id;
 
         let records = await categoryRepository.getCategories(userId);
 
@@ -44,18 +44,18 @@ async function saveCategory(req, res) {
     try {
         let data = await helper.loadSchema(req.body, {
             category: Joi.object().keys({
-                _id: Joi.string().allow(null),
+                id: Joi.number().allow(null),
                 title: Joi.string().required(),
                 description: Joi.string().required()
             })
         });
 
-        let userId = req.session.user._id;
+        let userId = req.session.user.id;
 
         let category = null;
 
-        if (data.category._id) {
-            await assertThatUserOwnsCategory(userId, data.category._id);
+        if (data.category.id) {
+            await assertThatUserOwnsCategory(userId, data.category.id);
 
             category = await categoryRepository.updateCategory(data.category);
         } else {
@@ -74,7 +74,7 @@ async function deleteCategory(req, res) {
             id: Joi.string().required()
         });
 
-        await assertThatUserOwnsCategory(req.session.user._id, data.id);
+        await assertThatUserOwnsCategory(req.session.user.id, data.id);
 
         await checkThatNoRecordsForCategory(data.id);
 
@@ -92,7 +92,7 @@ async function recordsList(req, res) {
             sortBy: Joi.string().required()
         });
 
-        let userId = req.session.user._id;
+        let userId = req.session.user.id;
 
         let records = await recordRepository.getRecords(userId, searchQuery);
 
@@ -106,20 +106,20 @@ async function saveRecord(req, res) {
     try {
         let data = await helper.loadSchema(req.body, {
             record: Joi.object().keys({
-                _id: Joi.string().allow(null),
+                id: Joi.number().allow(null),
                 date: Joi.date().required(),
-                categoryId: Joi.string().required(),
+                categoryId: Joi.number().required(),
                 cost: Joi.number().required(),
                 note: Joi.string().required()
             })
         });
 
-        let userId = req.session.user._id;
+        let userId = req.session.user.id;
 
         let record = null;
 
-        if (data.record._id) {
-            await assertThatUserOwnsRecord(userId, data.record._id);
+        if (data.record.id) {
+            await assertThatUserOwnsRecord(userId, data.record.id);
 
             record = await recordRepository.updateRecord(data.record);
         } else {
@@ -135,10 +135,10 @@ async function saveRecord(req, res) {
 async function deleteRecord(req, res) {
     try {
         let data = await helper.loadSchema(req.params, {
-            id: Joi.string().required()
+            id: Joi.number().required()
         });
 
-        await assertThatUserOwnsRecord(req.session.user._id, data.id);
+        await assertThatUserOwnsRecord(req.session.user.id, data.id);
 
         await recordRepository.removeRecord(data.id);
 
