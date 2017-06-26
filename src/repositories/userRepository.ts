@@ -24,7 +24,7 @@ export default {
 async function getUserByEmail(email) {
     let User = db.models.User;
 
-    return User.findOne({email});
+    return await User.findOne({email});
 }
 
 async function getLocalUserByEmail(email: string) {
@@ -61,7 +61,7 @@ async function saveLocalAccount(user, userData) {
 
         return await user.save();
     } else {
-        return User.create({
+        return await User.create({
             email: userData.email,
             profile: {
                 local: localProfile
@@ -73,13 +73,13 @@ async function saveLocalAccount(user, userData) {
 async function getUserById(id) {
     let User = db.models.User;
 
-    return User.findById(id);
+    return await User.findById(id);
 }
 
-function getUsers() {
+async function getUsers() {
     let User = db.models.User;
 
-    return User.find();
+    return await User.find();
 }
 
 async function getUserByActivationToken(token: string) {
@@ -125,13 +125,13 @@ async function updateUser(userData) {
     user.firstName = userData.firstName;
     user.lastName = userData.lastName;
 
-    return user.save();
+    return await user.save();
 }
 
-function removeUser(id) {
+async function removeUser(id) {
     let User = db.models.User;
 
-    return User.remove({_id: id});
+    return await User.remove({_id: id});
 }
 
 async function resetPassword(userId: number) {

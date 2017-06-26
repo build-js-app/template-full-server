@@ -20,9 +20,11 @@ let config = {
     email: {
         useStubs: true,
         fromNoReply: 'noreply@buildapp.com',
-        auth: {
-            user: '',
-            pass: ''
+        transport: {
+            auth: {
+                user: '',
+                pass: ''
+            }
         }
     }
 };

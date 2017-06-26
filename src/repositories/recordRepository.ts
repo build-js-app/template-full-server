@@ -9,7 +9,7 @@ export default {
     getRecordsByCategoryId
 };
 
-function getRecords(userId, searchQuery) {
+async function getRecords(userId, searchQuery) {
     let Record = db.models.Record;
 
     let query: any = {
@@ -20,27 +20,35 @@ function getRecords(userId, searchQuery) {
 
     sort[searchQuery.sortBy] = 1;
 
-    return Record.find(query).sort(sort);
+    let records = await Record.find(query).sort(sort);
+
+    return records.map(record => {
+        return mapRecord(record);
+    });
 }
 
-function getRecordById(id) {
+async function getRecordById(id) {
     let Record = db.models.Record;
 
-    return Record.findById(id);
+    let record = await Record.findById(id);
+
+    return mapRecord(record);
 }
 
-function addRecord(userId, record) {
+async function addRecord(userId, recordData) {
     let Record = db.models.Record;
 
-    record.userId = userId;
+    recordData.userId = userId;
 
-    return Record.create(record);
+    let record = await Record.create(recordData);
+
+    return mapRecord(record);
 }
 
 async function updateRecord(recordData) {
     let Record = db.models.Record;
 
-    let record = await Record.findOne({_id: recordData._id});
+    let record = await Record.findOne({_id: recordData.id});
 
     if (!record) return;
 
@@ -49,17 +57,31 @@ async function updateRecord(recordData) {
     record.categoryId = recordData.categoryId;
     record.note = recordData.note;
 
-    return record.save();
+    let result = await record.save();
+
+    return mapRecord(result);
 }
 
-function removeRecord(id) {
+async function removeRecord(id) {
     let Record = db.models.Record;
 
-    return Record.remove({_id: id});
+    return await Record.remove({_id: id});
 }
 
-function getRecordsByCategoryId(categoryId) {
+async function getRecordsByCategoryId(categoryId) {
     let Record = db.models.Record;
 
-    return Record.find({categoryId});
+    let records = await Record.find({categoryId});
+
+    return records.map(record => {
+        return mapRecord(record);
+    });
+}
+
+//helper methods
+
+function mapRecord(record) {
+    record._doc.id = record._id;
+
+    return record;
 }

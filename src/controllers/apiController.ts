@@ -44,7 +44,7 @@ async function saveCategory(req, res) {
     try {
         let data = await helper.loadSchema(req.body, {
             category: Joi.object().keys({
-                _id: Joi.string().allow(null),
+                id: Joi.string().allow(null),
                 title: Joi.string().required(),
                 description: Joi.string().required()
             })
@@ -54,8 +54,8 @@ async function saveCategory(req, res) {
 
         let category = null;
 
-        if (data.category._id) {
-            await assertUserOwnsCategory(userId, data.category._id);
+        if (data.category.id) {
+            await assertUserOwnsCategory(userId, data.category.id);
 
             category = await categoryRepository.updateCategory(data.category);
         } else {
@@ -106,7 +106,7 @@ async function saveRecord(req, res) {
     try {
         let data = await helper.loadSchema(req.body, {
             record: Joi.object().keys({
-                _id: Joi.string().allow(null),
+                id: Joi.string().allow(null),
                 date: Joi.date().required(),
                 categoryId: Joi.string().required(),
                 cost: Joi.number().required(),
@@ -118,8 +118,8 @@ async function saveRecord(req, res) {
 
         let record = null;
 
-        if (data.record._id) {
-            await assertUserOwnsRecord(userId, data.record._id);
+        if (data.record.id) {
+            await assertUserOwnsRecord(userId, data.record.id);
 
             record = await recordRepository.updateRecord(data.record);
         } else {

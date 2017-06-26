@@ -8,45 +8,63 @@ export default {
     removeCategory
 };
 
-function getCategoryById(id) {
+async function getCategoryById(id) {
     let Category = db.models.Category;
 
-    return Category.findById(id);
+    let category = await Category.findById(id);
+
+    return mapCategory(category);
 }
 
-function getCategories(userId) {
+async function getCategories(userId) {
     let Category = db.models.Category;
 
     let query = {
         userId
     };
 
-    return Category.find(query).sort({title: 1});
+    let categories = await Category.find(query).sort({title: 1});
+
+    return categories.map(category => {
+        return mapCategory(category);
+    });
 }
 
-function addCategory(userId, category) {
+async function addCategory(userId, categoryData) {
     let Category = db.models.Category;
 
-    category.userId = userId;
+    categoryData.userId = userId;
 
-    return Category.create(category);
+    let category = await Category.create(categoryData);
+
+    return mapCategory(category);
 }
 
 async function updateCategory(categoryData) {
     let Category = db.models.Category;
 
-    let category = await Category.findOne({_id: categoryData._id});
+    let category = await Category.findOne({_id: categoryData.id});
 
     if (!category) return;
 
     category.title = categoryData.title;
     category.description = categoryData.description;
 
-    return category.save();
+    let result = await category.save();
+
+    return mapCategory(result);
 }
 
-function removeCategory(id) {
+async function removeCategory(id) {
     let Category = db.models.Category;
 
-    return Category.remove({_id: id});
+    return await Category.remove({_id: id});
+}
+
+//helper methods
+
+function mapCategory(category) {
+    category._doc.id = category._id;
+
+    return category;
 }

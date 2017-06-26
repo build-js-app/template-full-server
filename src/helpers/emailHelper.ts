@@ -9,8 +9,8 @@ import config from '../config';
 const emailTransport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: config.email.auth.user,
-        pass: config.email.auth.pass
+        user: config.email.transport.auth.user,
+        pass: config.email.transport.auth.pass
     },
     tls: {
         rejectUnauthorized: false
