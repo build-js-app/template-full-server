@@ -20,26 +20,23 @@ export function init(sequelize, DataTypes) {
         }
     };
 
-    let options = {
-        classMethods: {
-            generateHash(password) {
-                return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-            },
-            associate: function (models) {
-                model.hasMany(models.Record, {
-                    foreignKey: helper.defineForeignKey('userId'),
-                    onDelete: 'no action'
-                });
+    let model = helper.defineModel('user', fields, sequelize);
 
-                model.hasMany(models.Category, {
-                    foreignKey: helper.defineForeignKey('userId'),
-                    onDelete: 'no action'
-                });
-            }
-        }
+    model.associate = function(models) {
+        model.hasMany(models.Record, {
+            foreignKey: helper.defineForeignKey('userId'),
+            onDelete: 'no action'
+        });
+
+        model.hasMany(models.Category, {
+            foreignKey: helper.defineForeignKey('userId'),
+            onDelete: 'no action'
+        });
     };
 
-    let model = helper.defineModel('user', fields, options, sequelize);
+    model.generateHash = function (password) {
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+    };
 
     return model;
 }

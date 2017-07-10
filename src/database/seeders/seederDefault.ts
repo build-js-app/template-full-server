@@ -20,23 +20,23 @@ async function seedData(db) {
 }
 
 async function seedUsers(db, usersData) {
-    return await usersData.map(user => {
-        return db.models.User.create(user);
-    });
+    for (let user of usersData) {
+        await db.models.User.create(user);
+    }
 }
 
 async function seedCategories(db, categoryData) {
-    return await categoryData.map(category => {
-        return db.models.Category.create(category);
-    });
+    for (let category of categoryData) {
+        await db.models.Category.create(category);
+    }
 }
 
 async function seedRecords(db, recordsData) {
-    return await recordsData.map(record => {
+    for (let record of recordsData) {
         record.date = dateFns.parse(record.date);
 
-        return db.models.Record.create(record);
-    });
+        await db.models.Record.create(record);
+    }
 }
 
 async function postImportRoutine(db) {
@@ -51,8 +51,8 @@ async function postImportRoutine(db) {
 
 function updatePostgresSequence(model, db) {
     let tableName = model.tableName;
-    let idField = model.autoIncrementField;
-    let sql = `SELECT setval('${tableName}_id_seq', (SELECT MAX(${idField}) FROM ${tableName}));`;
+    let idField = _.capitalize(model.autoIncrementField);
+    let sql = `SELECT setval('"${tableName}_Id_seq"', (SELECT MAX("${idField}") FROM "${tableName}"));`;
 
     return db.sequelize.query(sql);
 }

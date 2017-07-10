@@ -18,23 +18,19 @@ export function init(sequelize, DataTypes) {
         }
     };
 
-    let options = {
-        classMethods: {
-            associate: function (models) {
-                model.hasMany(models.Record, {
-                    foreignKey: helper.defineForeignKey('categoryId'),
-                    onDelete: 'no action'
-                });
+    let model = helper.defineModel('category', fields, sequelize);
 
-                model.belongsTo(models.User, {
-                    foreignKey: helper.defineForeignKey('userId'),
-                    onDelete: 'no action'
-                });
-            }
-        }
+    model.associate = function(models) {
+        model.hasMany(models.Record, {
+            foreignKey: helper.defineForeignKey('categoryId'),
+            onDelete: 'no action'
+        });
+
+        model.belongsTo(models.User, {
+            foreignKey: helper.defineForeignKey('userId'),
+            onDelete: 'no action'
+        });
     };
-
-    let model = helper.defineModel('category', fields, options, sequelize);
 
     return model;
 }

@@ -34,7 +34,7 @@
     "morgan": "^1.7.0",
     "nodemailer": "^3.1.8",
     "pg": "^6.1.5",
-    "sequelize": "^3.30.4",
+    "sequelize": "4.3.0",
     "winston": "^2.3.0"
   }
 }

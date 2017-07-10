@@ -21,23 +21,19 @@ export function init(sequelize, DataTypes) {
         }
     };
 
-    let options = {
-        classMethods: {
-            associate: function (models) {
-                model.belongsTo(models.Category, {
-                    foreignKey: helper.defineForeignKey('categoryId'),
-                    onDelete: 'no action'
-                });
+    let model = helper.defineModel('record', fields, sequelize);
 
-                model.belongsTo(models.User, {
-                    foreignKey: helper.defineForeignKey('userId'),
-                    onDelete: 'no action'
-                });
-            }
-        }
+    model.associate = function(models) {
+        model.belongsTo(models.Category, {
+            foreignKey: helper.defineForeignKey('categoryId'),
+            onDelete: 'no action'
+        });
+
+        model.belongsTo(models.User, {
+            foreignKey: helper.defineForeignKey('userId'),
+            onDelete: 'no action'
+        });
     };
-
-    let model = helper.defineModel('record', fields, options, sequelize);
 
     return model;
 }
