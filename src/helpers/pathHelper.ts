@@ -49,6 +49,11 @@ function getRelativePath(profileFolder, ...paths: string[]) {
 }
 
 function getRootPath() {
+    //TODO work around for ts-node
+    if (path.extname(__filename) === '.ts') {
+        profileData.development.root = '../..';
+    }
+
     let rootRelative = profileData[getCurrentProfile()].root;
 
     if (!rootRelative) throw Error('Cannot find root folder');

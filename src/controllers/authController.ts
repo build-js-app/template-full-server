@@ -63,6 +63,10 @@ async function loginPost(req, res) {
 
         let user = await userRepository.getLocalUserByEmail(userData.email.toLowerCase());
 
+        if (!user) {
+            throw new AppError('The email address or password that you entered is not valid');
+        }
+
         if (!user.profile.local.isActivated)
             throw new AppError('Your account is not activated yet. Please check your email for activation letter or sign up again to get a new one.');
 

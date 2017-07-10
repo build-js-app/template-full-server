@@ -93,7 +93,7 @@ async function getUserByActivationToken(token: string) {
     let users = await getUsers();
 
     let findUser = _.find(users, (user: any) => {
-        return user.profile.local &&
+        return user.profile.local && user.profile.local.activation &&
             user.profile.local.activation.token === token;
     });
 
@@ -118,8 +118,12 @@ async function activateUser(userId: number) {
 
     if (!user) throw new AppError('User not found.');
 
-    user.profile.local.activation = undefined;
-    user.profile.local.isActivated = true;
+    let profile = user.profile;
+
+    profile.local.activation = undefined;
+    profile.local.isActivated = true;
+
+    user.set('profile', profile);
 
     return await user.save();
 }
