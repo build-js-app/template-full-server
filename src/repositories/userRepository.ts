@@ -68,7 +68,8 @@ async function saveLocalAccount(user, userData) {
 
     if (user) {
         user.email = userData.email;
-        user.profile.local = localProfile;
+
+        user.set('profile', {local: localProfile});
 
         return await user.save();
     } else {
@@ -152,10 +153,14 @@ async function resetPassword(userId: number) {
 
     if (!user) throw new AppError('Cannot find user by Id');
 
-    user.profile.local.reset = {
+    let profile = user.profile;
+
+    profile.local.reset = {
         token: generateActivationToken(),
         created: new Date().toString()
     };
+
+    user.set('profile', profile);
 
     return await user.save();
 }
@@ -165,8 +170,12 @@ async function updateUserPassword(userId: number, password: string) {
 
     if (!user) throw new AppError('Cannot find user');
 
-    user.profile.local.reset = undefined;
-    user.profile.local.password = user.generateHash(password);
+    let profile = user.profile;
+
+    profile.local.reset = undefined;
+    profile.local.password = userModel.generateHash(password);
+
+    user.set('profile', profile);
 
     return await user.save();
 }
@@ -175,7 +184,8 @@ async function getUserByResetToken(token: string) {
     let users = await getUsers();
 
     let findUser = _.find(users, (user: any) => {
-        return user.profile.local && user.profile.local.reset.token === token;
+        let local = user.profile.local;
+        return local && local.reset && local.reset.token === token;
     });
 
     return findUser;
