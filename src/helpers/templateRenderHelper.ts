@@ -2,29 +2,29 @@ import * as hbs from 'handlebars';
 import * as fs from 'fs-extra';
 
 export default {
-    renderTemplate
+  renderTemplate
 };
 
 let templatesCache = {};
 
 async function renderTemplate(templatePath: string, data) {
-    if (!templatesCache[templatePath]) {
-        let source = await readFile(templatePath);
+  if (!templatesCache[templatePath]) {
+    let source = await readFile(templatePath);
 
-        templatesCache[templatePath] = hbs.compile(source);
-    }
+    templatesCache[templatePath] = hbs.compile(source);
+  }
 
-    let template = templatesCache[templatePath];
+  let template = templatesCache[templatePath];
 
-    return template(data);
+  return template(data);
 }
 
 function readFile(filePath) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            if (err) return reject(err);
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) return reject(err);
 
-            return resolve(data);
-        });
+      return resolve(data);
     });
+  });
 }

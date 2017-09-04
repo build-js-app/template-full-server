@@ -1,24 +1,24 @@
 {
-    "port": 5000,
-    "rootUrl": "http://localhost:5000",
-    "auth": {
-        "jwtKey": "override_in_local_config_!!!"
-    },
-    "db": {
-        "host": "localhost",
-        "port": 27017,
-        "name": "expense-manager",
-        "username": "",
-        "password": ""
-    },
-    "email": {
-        "useStubs": true,
-        "fromNoReply": "noreply@buildapp.com",
-        "transport": {
-            "auth": {
-                "user": "replace@gmail.com",
-                "pass": "replace"
-            }
-        }
+  "port": 5000,
+  "rootUrl": "http://localhost:5000",
+  "auth": {
+    "jwtKey": "override_in_local_config_!!!"
+  },
+  "db": {
+    "host": "localhost",
+    "port": 27017,
+    "name": "expense-manager",
+    "username": "",
+    "password": ""
+  },
+  "email": {
+    "useStubs": true,
+    "fromNoReply": "noreply@buildapp.com",
+    "transport": {
+      "auth": {
+        "user": "replace@gmail.com",
+        "pass": "replace"
+      }
     }
+  }
 }

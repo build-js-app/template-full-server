@@ -7,45 +7,41 @@ let errorLogger = null;
 let generalLogger = null;
 
 export default {
-    error: logError,
-    info
+  error: logError,
+  info
 };
 
 async function initLoggers() {
-    let logPath = pathHelper.getLocalRelative('./logs');
+  let logPath = pathHelper.getLocalRelative('./logs');
 
-    await fs.ensureDirSync(logPath);
+  await fs.ensureDirSync(logPath);
 
-    let errorLogPath = pathHelper.getLocalRelative('./logs/errors.log');
-    let infoLogPath = pathHelper.getLocalRelative('./logs/info.log');
+  let errorLogPath = pathHelper.getLocalRelative('./logs/errors.log');
+  let infoLogPath = pathHelper.getLocalRelative('./logs/info.log');
 
-    errorLogger = new(winston.Logger)({
-        transports: [
-            new(winston.transports.File)({ filename: errorLogPath })
-        ]
-    });
+  errorLogger = new winston.Logger({
+    transports: [new winston.transports.File({filename: errorLogPath})]
+  });
 
-    winston.handleExceptions(new winston.transports.File({ filename: errorLogPath }));
+  winston.handleExceptions(new winston.transports.File({filename: errorLogPath}));
 
-    generalLogger = new(winston.Logger)({
-        transports: [
-            new(winston.transports.File)({ filename: infoLogPath })
-        ]
-    });
+  generalLogger = new winston.Logger({
+    transports: [new winston.transports.File({filename: infoLogPath})]
+  });
 }
 
 initLoggers();
 
 function logError(err) {
-    console.log(err);
+  console.log(err);
 
-    if (_.isError(err)) {
-        return errorLogger.error('Error', { errorMessage: err.message, stack: err.stack });
-    } else {
-        errorLogger.error(err);
-    }
+  if (_.isError(err)) {
+    return errorLogger.error('Error', {errorMessage: err.message, stack: err.stack});
+  } else {
+    errorLogger.error(err);
+  }
 }
 
 function info(message, metadata = {}) {
-    generalLogger.info(message, metadata);
+  generalLogger.info(message, metadata);
 }

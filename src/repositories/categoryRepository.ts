@@ -1,70 +1,70 @@
 import db from '../database/database';
 
 export default {
-    getCategoryById,
-    getCategories,
-    addCategory,
-    updateCategory,
-    removeCategory
+  getCategoryById,
+  getCategories,
+  addCategory,
+  updateCategory,
+  removeCategory
 };
 
 async function getCategoryById(id) {
-    let Category = db.models.Category;
+  let Category = db.models.Category;
 
-    let category = await Category.findById(id);
+  let category = await Category.findById(id);
 
-    return mapCategory(category);
+  return mapCategory(category);
 }
 
 async function getCategories(userId) {
-    let Category = db.models.Category;
+  let Category = db.models.Category;
 
-    let query = {
-        userId
-    };
+  let query = {
+    userId
+  };
 
-    let categories = await Category.find(query).sort({title: 1});
+  let categories = await Category.find(query).sort({title: 1});
 
-    return categories.map(category => {
-        return mapCategory(category);
-    });
+  return categories.map(category => {
+    return mapCategory(category);
+  });
 }
 
 async function addCategory(userId, categoryData) {
-    let Category = db.models.Category;
+  let Category = db.models.Category;
 
-    categoryData.userId = userId;
+  categoryData.userId = userId;
 
-    let category = await Category.create(categoryData);
+  let category = await Category.create(categoryData);
 
-    return mapCategory(category);
+  return mapCategory(category);
 }
 
 async function updateCategory(categoryData) {
-    let Category = db.models.Category;
+  let Category = db.models.Category;
 
-    let category = await Category.findOne({_id: categoryData.id});
+  let category = await Category.findOne({_id: categoryData.id});
 
-    if (!category) return;
+  if (!category) return;
 
-    category.title = categoryData.title;
-    category.description = categoryData.description;
+  category.title = categoryData.title;
+  category.description = categoryData.description;
 
-    let result = await category.save();
+  let result = await category.save();
 
-    return mapCategory(result);
+  return mapCategory(result);
 }
 
 async function removeCategory(id) {
-    let Category = db.models.Category;
+  let Category = db.models.Category;
 
-    return await Category.remove({_id: id});
+  return await Category.remove({_id: id});
 }
 
 //helper methods
 
 function mapCategory(category) {
-    category._doc.id = category._id;
+  category._doc.id = category._id;
 
-    return category;
+  return category;
 }
