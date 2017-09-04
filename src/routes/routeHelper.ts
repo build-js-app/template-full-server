@@ -1,3 +1,6 @@
+import * as _ from 'lodash';
+import * as jwt from 'jsonwebtoken';
+
 let app = null;
 import config from '../config';
 
@@ -60,10 +63,37 @@ function setOptionsDefaults(options) {
 
 function getAuthenticatedCheckHandler() {
     return (req, res, next) => {
-        let isAuthenticated = !!req.session.user;
+        let header = req.headers['authorization'] || req.headers['Authorization'];
 
-        if (isAuthenticated) return next();
+        let token = parseTokenFromHeader(header);
 
-        res.status(401).send('Unauthorized');
+        if (!token) {
+            return res.status(403).send({
+                success: false,
+                message: 'No token provided.'
+            });
+        }
+
+        // decode token
+        // verifies secret and checks exp
+        jwt.verify(token, config.auth.jwtKey, (err, decoded) => {
+            if (err) {
+                return res.status(401).send('Unauthorized');
+            }
+
+            req.currentUser = decoded;
+
+            return next();
+        });
     };
+
+    function parseTokenFromHeader(header) {
+        if (!header) return null;
+
+        let prefix = 'Bearer ';
+
+        if (!_.startsWith(header, prefix)) return null;
+
+        return header.substring(prefix.length);
+    }
 }

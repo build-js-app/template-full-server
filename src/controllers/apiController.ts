@@ -18,7 +18,7 @@ export default {
 
 async function currentUser(req, res) {
     try {
-        let userId = req.session.user._id;
+        let userId = helper.getCurrentUser(req)._id;
 
         let user = await userRepository.getUserById(userId);
 
@@ -30,7 +30,7 @@ async function currentUser(req, res) {
 
 async function categoryList(req, res) {
     try {
-        let userId = req.session.user._id;
+        let userId = helper.getCurrentUser(req)._id;
 
         let records = await categoryRepository.getCategories(userId);
 
@@ -50,7 +50,7 @@ async function saveCategory(req, res) {
             })
         });
 
-        let userId = req.session.user._id;
+        let userId = helper.getCurrentUser(req)._id;
 
         let category = null;
 
@@ -74,7 +74,7 @@ async function deleteCategory(req, res) {
             id: Joi.string().required()
         });
 
-        await assertUserOwnsCategory(req.session.user._id, data.id);
+        await assertUserOwnsCategory(helper.getCurrentUser(req)._id, data.id);
 
         await assertCategoryHasNoRecords(data.id);
 
@@ -92,7 +92,7 @@ async function recordList(req, res) {
             sortBy: Joi.string().required()
         });
 
-        let userId = req.session.user._id;
+        let userId = helper.getCurrentUser(req)._id;
 
         let records = await recordRepository.getRecords(userId, searchQuery);
 
@@ -114,7 +114,7 @@ async function saveRecord(req, res) {
             })
         });
 
-        let userId = req.session.user._id;
+        let userId = helper.getCurrentUser(req)._id;
 
         let record = null;
 
@@ -138,7 +138,7 @@ async function deleteRecord(req, res) {
             id: Joi.string().required()
         });
 
-        await assertUserOwnsRecord(req.session.user._id, data.id);
+        await assertUserOwnsRecord(helper.getCurrentUser(req)._id, data.id);
 
         await recordRepository.removeRecord(data.id);
 

@@ -1,15 +1,16 @@
 import * as bcrypt from 'bcrypt-nodejs';
 import * as Joi from 'joi';
 import * as dateFns from 'date-fns';
+import * as jwt from 'jsonwebtoken';
 
 import helper from './_controllerHelper';
 import userRepository from '../repositories/userRepository';
 import AppError from '../appError';
+import config from '../config';
 
 export default {
     signUpPost,
     loginPost,
-    logOut,
     activate,
     forgotPassword,
     resetPassword,
@@ -31,7 +32,7 @@ async function signUpPost(req, res) {
         //Use lower-case e-mails to avoid case-sensitive e-mail matching
         userData.email = userData.email.toLowerCase();
 
-        if (req.session.user) throw new AppError('Log out before signing up.');
+        if (helper.getCurrentUser(req)) throw new AppError('Log out before signing up.');
 
         let localUser = await userRepository.getLocalUserByEmail(userData.email);
 
@@ -64,7 +65,9 @@ async function loginPost(req, res) {
         let user = await userRepository.getLocalUserByEmail(userData.email.toLowerCase());
 
         if (!user.profile.local.isActivated)
-            throw new AppError('Your account is not activated yet. Please check your email for activation letter or sign up again to get a new one.');
+            throw new AppError(
+                'Your account is not activated yet. Please check your email for activation letter or sign up again to get a new one.'
+            );
 
         if (user) {
             let isValidPassword = bcrypt.compareSync(userData.password, user.profile.local.password);
@@ -80,19 +83,16 @@ async function loginPost(req, res) {
 
         user = user.toObject();
 
-        req.session.user = user;
+        let token = jwt.sign(user, config.auth.jwtKey, {
+            expiresIn: config.auth.expiry
+        });
 
-        return helper.sendData(user, res);
-    } catch (err) {
-        helper.sendFailureMessage(err, res);
-    }
-}
+        let result = {
+            token,
+            user
+        };
 
-async function logOut(req, res) {
-    try {
-        req.session.user = null;
-
-        return helper.sendData({}, res);
+        return helper.sendData(result, res);
     } catch (err) {
         helper.sendFailureMessage(err, res);
     }
@@ -180,7 +180,6 @@ async function resetPassword(req, res) {
         };
 
         return helper.sendData(data, res);
-
     } catch (err) {
         helper.sendFailureMessage(err, res);
     }

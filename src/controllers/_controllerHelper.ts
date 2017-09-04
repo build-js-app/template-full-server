@@ -10,7 +10,8 @@ export default {
     sendFailureMessage,
     loadSchema,
     sendActivationEmail,
-    sendResetPasswordEmail
+    sendResetPasswordEmail,
+    getCurrentUser
 };
 
 function sendFailureMessage(error, res) {
@@ -111,4 +112,8 @@ function sendResetPasswordEmail(email, token) {
         to: email,
         from: config.email.fromNoReply
     });
+}
+
+function getCurrentUser(req) {
+    return req.currentUser;
 }

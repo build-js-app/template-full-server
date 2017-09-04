@@ -9,6 +9,10 @@ let config = {
     isDevLocal: process.env.NODE_ENV !== 'production',
     appVersion: '0.0.1',
     rootUrl: 'http://localhost:3000',
+    auth: {
+        jwtKey: '',
+        expiry: 60 * 60 * 2
+    },
     db: {
         host: 'localhost',
         port: 27017,

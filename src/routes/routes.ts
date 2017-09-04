@@ -15,7 +15,7 @@ function initRoutes(app) {
     initAuthRoutes(helper);
 
     //all other routes are rendered as home (for client side routing)
-    helper.get('*', homeController.home, { auth: false });
+    helper.get('*', homeController.home, {auth: false});
 }
 
 function initApiRoutes(helper) {
@@ -31,11 +31,10 @@ function initApiRoutes(helper) {
 }
 
 function initAuthRoutes(helper) {
-    helper.post('/api/sign-up', authController.signUpPost, { auth: false });
-    helper.post('/api/login', authController.loginPost, { auth: false });
-    helper.post('/api/logout', authController.logOut, { auth: false });
-    helper.post('/api/password-forgot', authController.forgotPassword, { auth: false });
-    helper.get('/api/password-reset/:token', authController.resetPassword, { auth: false });
-    helper.post('/api/password-reset', authController.resetPasswordPost, { auth: false });
-    helper.get('/api/activate/:token', authController.activate, { auth: false });
+    helper.post('/api/sign-up', authController.signUpPost, {auth: false});
+    helper.post('/api/login', authController.loginPost, {auth: false});
+    helper.post('/api/password-forgot', authController.forgotPassword, {auth: false});
+    helper.get('/api/password-reset/:token', authController.resetPassword, {auth: false});
+    helper.post('/api/password-reset', authController.resetPasswordPost, {auth: false});
+    helper.get('/api/activate/:token', authController.activate, {auth: false});
 }
