@@ -1,6 +1,10 @@
 {
   "port": 5000,
   "rootUrl": "http://localhost:5000",
+  "auth": {
+    "jwtKey": "expense_manager_jwt_key",
+    "expiry": 86400
+  },
   "db": {
     "host": "localhost",
     "port": 5432,
