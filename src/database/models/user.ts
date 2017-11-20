@@ -22,7 +22,7 @@ export function init(sequelize, DataTypes) {
 
   let model = helper.defineModel('user', fields, sequelize);
 
-  model.associate = function(models) {
+  model.associate = models => {
     model.hasMany(models.Record, {
       foreignKey: helper.defineForeignKey('userId'),
       onDelete: 'no action'
@@ -34,7 +34,7 @@ export function init(sequelize, DataTypes) {
     });
   };
 
-  model.generateHash = function(password) {
+  model.generateHash = password => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
   };
 

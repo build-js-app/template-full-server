@@ -20,7 +20,7 @@ export function init(sequelize, DataTypes) {
 
   let model = helper.defineModel('category', fields, sequelize);
 
-  model.associate = function(models) {
+  model.associate = models => {
     model.hasMany(models.Record, {
       foreignKey: helper.defineForeignKey('categoryId'),
       onDelete: 'no action'

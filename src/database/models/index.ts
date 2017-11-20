@@ -10,16 +10,16 @@ module.exports = {
 function initModels(sequelize) {
   let result = {};
 
-  _.forEach(models, modelInit => {
+  for (let modelInit of models) {
     let model = modelInit.init(sequelize, Sequelize);
     result[_.upperFirst(model.name)] = model;
-  });
+  }
 
-  _.forEach(_.keys(result), modelName => {
+  for (let modelName of Object.keys(result)) {
     if (result[modelName].associate) {
       result[modelName].associate(result);
     }
-  });
+  }
 
   return result;
 }
