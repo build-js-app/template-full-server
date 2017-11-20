@@ -2,11 +2,23 @@
   "users": [
     {
       "id": 1,
-      "email": "test@gmail.com",
+      "email": "user_a@test.com",
       "profile": {
         "local": {
-          "firstName": "Test Name",
-          "lastName": "Text Last Name",
+          "firstName": "Adam",
+          "lastName": "Smith",
+          "password": "$2a$08$BTFq69dmB6KieYy5l51mnedz7qpa.4KT8GWp5xEK7bFOfIxgTlB76",
+          "isActivated": true
+        }
+      }
+    },
+    {
+      "id": 2,
+      "email": "user_b@test.com",
+      "profile": {
+        "local": {
+          "firstName": "Bob",
+          "lastName": "Smith",
           "password": "$2a$08$BTFq69dmB6KieYy5l51mnedz7qpa.4KT8GWp5xEK7bFOfIxgTlB76",
           "isActivated": true
         }
@@ -17,24 +29,40 @@
     {
       "id": 1,
       "date": "10/06/2017",
-      "cost": 20.2,
-      "note": "some note",
+      "cost": 3.5,
+      "note": "coffee",
       "userId": 1,
       "categoryId": 1
     },
     {
       "id": 2,
       "date": "10/07/2017",
-      "cost": 200,
-      "note": "some note",
+      "cost": 14,
+      "note": "lunch",
       "userId": 1,
       "categoryId": 1
     },
     {
       "id": 3,
       "date": "10/08/2017",
-      "cost": 111.2,
-      "note": "some note",
+      "cost": 22,
+      "note": "cinema (Blade Runner)",
+      "userId": 1,
+      "categoryId": 3
+    },
+    {
+      "id": 4,
+      "date": "10/08/2017",
+      "cost": 105,
+      "note": "supermarket",
+      "userId": 1,
+      "categoryId": 1
+    },
+    {
+      "id": 5,
+      "date": "10/08/2017",
+      "cost": 24,
+      "note": "washing powder",
       "userId": 1,
       "categoryId": 2
     }
@@ -42,14 +70,20 @@
   "categories": [
     {
       "id": 1,
-      "title": "First Cat",
-      "description": "First Cat Description",
+      "title": "Food",
+      "description": "Food category",
       "userId": 1
     },
     {
       "id": 2,
-      "title": "Second Cat",
-      "description": "Second Cat Description",
+      "title": "Home",
+      "description": "Home category",
+      "userId": 1
+    },
+    {
+      "id": 3,
+      "title": "Entertainment",
+      "description": "Entertainment category",
       "userId": 1
     }
   ]
