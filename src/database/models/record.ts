@@ -1,5 +1,7 @@
 import * as mongoose from 'mongoose';
 
+let ObjectId = mongoose.Schema.ObjectId;
+
 let schema = new mongoose.Schema({
   date: {
     type: Date,
@@ -14,11 +16,11 @@ let schema = new mongoose.Schema({
     required: true
   },
   categoryId: {
-    type: String,
+    type: ObjectId,
     required: true
   },
   userId: {
-    type: String,
+    type: ObjectId,
     required: true
   }
 });

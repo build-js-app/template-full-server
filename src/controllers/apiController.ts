@@ -151,7 +151,7 @@ async function deleteRecord(req, res) {
 async function assertUserOwnsCategory(userId, categoryId) {
   let category = await categoryRepository.getCategoryById(categoryId);
 
-  let hasRights = category && category.userId === userId;
+  let hasRights = category && category.userId.toString() === userId;
 
   if (!hasRights) throw new AppError('User does not own category');
 }
@@ -159,7 +159,7 @@ async function assertUserOwnsCategory(userId, categoryId) {
 async function assertUserOwnsRecord(userId, recordId) {
   let record = await recordRepository.getRecordById(recordId);
 
-  let hasRights = record && record.userId === userId;
+  let hasRights = record && record.userId.toString() === userId;
 
   if (!hasRights) throw new AppError('User does not own record');
 }

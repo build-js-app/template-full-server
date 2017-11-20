@@ -1,5 +1,7 @@
 import * as mongoose from 'mongoose';
 
+let ObjectId = mongoose.Schema.ObjectId;
+
 let schema = new mongoose.Schema({
   title: {
     type: String,
@@ -10,7 +12,7 @@ let schema = new mongoose.Schema({
     required: true
   },
   userId: {
-    type: String,
+    type: ObjectId,
     required: true
   }
 });
