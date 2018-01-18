@@ -1,9 +1,6 @@
-import * as fs from 'fs-extra';
-import * as _ from 'lodash';
-
 import pathHelper from './helpers/pathHelper';
+import configBuilder from './helpers/configHelper';
 
-let logConfig = true;
 let config = {
   port: 3000,
   isDevLocal: process.env.NODE_ENV !== 'production',
@@ -19,7 +16,8 @@ let config = {
     name: 'expense-manager',
     username: '',
     password: '',
-    timeout: 5000
+    timeout: 5000,
+    seedOnStart: false
   },
   email: {
     useStubs: true,
@@ -33,23 +31,12 @@ let config = {
   }
 };
 
-function tryReadConfigFile(path) {
-  try {
-    return fs.readJsonSync(path);
-  } catch (err) {
-    return {};
-  }
-}
+configBuilder.addJsonFile(config, pathHelper.getDataRelative('config.json'), true);
 
-let defaultFile = tryReadConfigFile(pathHelper.getDataRelative('config.json'));
-_.merge(config, defaultFile);
+configBuilder.addJsonFile(config, pathHelper.getLocalRelative('config.local.json'));
 
-let localFile = tryReadConfigFile(pathHelper.getLocalRelative('config.local.json'));
-_.merge(config, localFile);
-
-if (logConfig) {
-  console.log('App configuration:');
-  console.log(JSON.stringify(config, null, 2));
+if (config.isDevLocal) {
+  configBuilder.printConfig(config);
 }
 
 export default config;
