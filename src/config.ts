@@ -1,7 +1,6 @@
-import * as fs from 'fs-extra';
 import pathHelper from './helpers/pathHelper';
+import configBuilder from './helpers/configHelper';
 
-let logConfig = true;
 let config = {
   port: 3000,
   isDevLocal: process.env.NODE_ENV !== 'production',
@@ -17,7 +16,8 @@ let config = {
     port: 27017,
     name: 'expense-manager',
     username: '',
-    password: ''
+    password: '',
+    seedOnStart: false
   },
   email: {
     useStubs: false,
@@ -25,35 +25,12 @@ let config = {
   }
 };
 
-function tryReadConfigFile(path) {
-  try {
-    return fs.readJsonSync(path);
-  } catch (err) {
-    return {};
-  }
-}
+configBuilder.addJsonFile(config, pathHelper.getDataRelative('config.json'), true);
 
-function loadEnvVars(config) {
-  if (process.env.PARSE_SERVER_URL) {
-    config.parseServerUrl = process.env.PARSE_SERVER_URL;
-  }
+configBuilder.addJsonFile(config, pathHelper.getLocalRelative('config.local.json'));
 
-  if (process.env.PARSE_APP_ID) {
-    config.parseAppId = process.env.PARSE_APP_ID;
-  }
-}
-
-let defaultFile = tryReadConfigFile(pathHelper.getDataRelative('config.json'));
-Object.assign(config, defaultFile);
-
-let localFile = tryReadConfigFile(pathHelper.getLocalRelative('config.local.json'));
-Object.assign(config, localFile);
-
-loadEnvVars(config);
-
-if (logConfig) {
-  console.log('App configuration:');
-  console.log(JSON.stringify(config, null, 2));
+if (config.isDevLocal) {
+  configBuilder.printConfig(config);
 }
 
 export default config;
