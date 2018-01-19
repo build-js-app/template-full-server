@@ -4,3 +4,4 @@ local/emails
 node_modules
 local/config.local.json
 shrinkwrap.yaml
+src/test.ts
