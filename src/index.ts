@@ -20,12 +20,17 @@ async function start() {
   logger.info(`Server started.`);
 }
 
-let args = process.argv;
+let run = async () => {
+  let args = process.argv;
 
-//run task
-if (args[2] === 'run') {
-  tasks.run(args[3]);
-  //run server
-} else {
-  start();
-}
+  //run task
+  if (args[2] === 'run') {
+    await tasks.run(args[3]);
+    process.exit(0);
+    //run server
+  } else {
+    await start();
+  }
+};
+
+run();
