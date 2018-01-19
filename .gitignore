@@ -6,3 +6,4 @@ local/config.local.json
 .idea/
 shrinkwrap.yaml
 src/test.ts
+package-lock.json

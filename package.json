@@ -28,7 +28,6 @@
     "cookie-parser": "1.4.3",
     "cors": "2.8.4",
     "date-fns": "1.29.0",
-    "email-templates": "2.7.1",
     "express": "4.16.2",
     "fs-extra": "5.0.0",
     "handlebars": "4.0.11",
