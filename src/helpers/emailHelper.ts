@@ -1,6 +1,7 @@
 import * as dateFns from 'date-fns';
 import * as fs from 'fs-extra';
 import * as nodemailer from 'nodemailer';
+import * as sgTransport from 'nodemailer-sendgrid-transport';
 
 import pathHelper from './pathHelper';
 import config from '../config';
@@ -11,29 +12,42 @@ export default {
   sendEmailTemplate
 };
 
-const emailTransport = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: config.email.transport.auth.user,
-    pass: config.email.transport.auth.pass
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
-
 interface EmailOptions {
   from: string;
   to: string;
   subject?: string;
-  body?: string;
+  html?: string;
+}
+
+function getEmailTransport() {
+  let transportOptions = {
+    service: 'gmail',
+    auth: {
+      user: config.email.auth.user,
+      pass: config.email.auth.password
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  };
+
+  //use SendGrid if available
+  if (config.email.sendGridKey) {
+    transportOptions = sgTransport({
+      auth: {
+        api_key: config.email.sendGridKey
+      }
+    });
+  }
+
+  return nodemailer.createTransport(transportOptions);
 }
 
 async function sendEmailTemplate(templateName: string, emailData: Object, emailOptions: EmailOptions) {
   try {
     let response = await renderTemplate(templateName, emailData);
 
-    emailOptions.body = response.body;
+    emailOptions.html = response.body;
 
     if (!emailOptions.subject) emailOptions.subject = response.subject;
 
@@ -70,9 +84,11 @@ async function renderTemplate(name: string, data: Object): Promise<any> {
   return result;
 }
 
-function sendEmail(emailOptions: EmailOptions): Promise<any> {
-  return new Promise<any>((resolve, reject) => {
-    emailTransport.sendMail(emailOptions, (error, info) => {
+function sendEmail(emailData: EmailOptions): Promise<Object> {
+  let emailTransport = getEmailTransport();
+
+  return new Promise<Object>((resolve, reject) => {
+    emailTransport.sendMail(emailData, (error, info) => {
       if (error) return Promise.reject(error);
 
       return info;

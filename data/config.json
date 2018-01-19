@@ -5,20 +5,16 @@
     "jwtKey": "override_in_local_config_!!!"
   },
   "db": {
-    "host": "localhost",
-    "port": 27017,
     "name": "expense-manager",
     "username": "",
     "password": ""
   },
   "email": {
     "useStubs": true,
-    "fromNoReply": "noreply@buildapp.com",
-    "transport": {
-      "auth": {
-        "user": "replace@gmail.com",
-        "pass": "replace"
-      }
-    }
+    "auth": {
+      "user": "???",
+      "password": "???"
+    },
+    "fromNoReply": "noreply@buildapp.com"
   }
 }

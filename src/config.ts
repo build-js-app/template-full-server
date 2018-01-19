@@ -20,14 +20,13 @@ let config = {
     seedOnStart: false
   },
   email: {
-    useStubs: true,
-    fromNoReply: 'noreply@buildapp.com',
-    transport: {
-      auth: {
-        user: '',
-        pass: ''
-      }
-    }
+    useStubs: false,
+    sendGridKey: '',
+    auth: {
+      user: '',
+      password: ''
+    },
+    fromNoReply: 'noreply@buildapp.com'
   }
 };
 
