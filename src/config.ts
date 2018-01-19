@@ -21,6 +21,11 @@ let config = {
   },
   email: {
     useStubs: false,
+    sendGridKey: '',
+    auth: {
+      user: '',
+      password: ''
+    },
     fromNoReply: 'noreply@buildapp.com'
   }
 };
