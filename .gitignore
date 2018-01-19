@@ -5,3 +5,4 @@ node_modules
 local/config.local.json
 shrinkwrap.yaml
 src/test.ts
+package-lock.json

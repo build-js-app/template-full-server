@@ -30,7 +30,6 @@
     "cors": "2.8.4",
     "crypto": "1.0.1",
     "date-fns": "1.29.0",
-    "email-templates": "3.3.3",
     "express": "4.16.2",
     "fs-extra": "5.0.0",
     "handlebars": "4.0.11",

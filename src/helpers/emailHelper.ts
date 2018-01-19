@@ -1,11 +1,15 @@
 import * as dateFns from 'date-fns';
 import * as fs from 'fs-extra';
+import * as nodemailer from 'nodemailer';
 
 import pathHelper from './pathHelper';
 import config from '../config';
+import templateRenderer from './templateRenderHelper';
 
-const nodemailer = require('nodemailer');
-const EmailTemplate = require('email-templates').EmailTemplate;
+export default {
+  sendEmail,
+  sendEmailTemplate
+};
 
 const emailTransport = nodemailer.createTransport({
   service: 'gmail',
@@ -15,22 +19,57 @@ const emailTransport = nodemailer.createTransport({
   }
 });
 
-export default {
-  sendEmail,
-  sendEmailTemplate
-};
-
 interface EmailOptions {
   from: string;
   to: string;
   subject?: string;
-  text?: string;
-  html?: string;
+  body?: string;
 }
 
-function sendEmail(emailOptions: EmailOptions): Promise<Object> {
+async function sendEmailTemplate(templateName: string, emailData: Object, emailOptions: EmailOptions) {
+  try {
+    let response = await renderTemplate(templateName, emailData);
+
+    emailOptions.body = response.body;
+
+    if (!emailOptions.subject) emailOptions.subject = response.subject;
+
+    if (config.email.useStubs && config.isDevLocal) {
+      await sendStubEmail(emailOptions);
+    } else {
+      await sendEmail(emailOptions);
+    }
+  } catch (err) {
+    console.log('Cannot render email template');
+  }
+}
+
+async function renderTemplate(name: string, data: Object): Promise<any> {
+  let result = {
+    body: null,
+    subject: null
+  };
+
+  let bodyFileName = pathHelper.getDataRelative('emails', name, 'body.hbs');
+  let bodyExists = await fs.pathExists(bodyFileName);
+
+  if (!bodyExists) throw new Error(`Cannot find email template file at ${bodyFileName}`);
+
+  result.body = await templateRenderer.renderTemplate(bodyFileName, data);
+
+  let subjectFileName = pathHelper.getDataRelative('emails', name, 'subject.hbs');
+  let subjectExists = await fs.pathExists(bodyFileName);
+
+  if (subjectExists) {
+    result.subject = await templateRenderer.renderTemplate(subjectFileName, data);
+  }
+
+  return result;
+}
+
+function sendEmail(emailData: EmailOptions): Promise<Object> {
   return new Promise<Object>((resolve, reject) => {
-    emailTransport.sendMail(emailOptions, function(error, info) {
+    emailTransport.sendMail(emailData, (error, info) => {
       if (error) return Promise.reject(error);
 
       return info;
@@ -38,56 +77,12 @@ function sendEmail(emailOptions: EmailOptions): Promise<Object> {
   });
 }
 
-async function sendEmailTemplate(templateName: string, data: Object, emailData: EmailOptions) {
-  try {
-    let response = await renderTemplate(templateName, data);
-
-    emailData.html = response.html;
-
-    if (!emailData.subject) emailData.subject = response.subject;
-
-    if (config.email.useStubs && config.isDevLocal) {
-      await sendStubEmail(emailData);
-    } else {
-      return new Promise((resolve, reject) => {
-        emailTransport.sendMail(emailData, function(err, info) {
-          if (err) return reject(err);
-
-          return resolve(info);
-        });
-      });
-    }
-  } catch (err) {
-    console.log('Cannot render email template');
-  }
-}
-
-function renderTemplate(name: string, data: Object): Promise<any> {
-  let templateDir = pathHelper.getDataRelative('emails', name);
-  let template = new EmailTemplate(templateDir);
-
-  return new Promise<any>((resolve, reject) => {
-    template.render(data, function(err, result) {
-      if (err) reject(err);
-
-      return resolve(result);
-    });
-  });
-}
-
 async function sendStubEmail(mailOptions) {
   try {
-    let {from, to, subject, text, html} = mailOptions;
+    let {from, to, subject, body} = mailOptions;
 
-    let nowDateStr = dateFns.format(new Date(), 'DD-MM_HH-mm-ss');
-    let fileName = `${nowDateStr}_${to}_${subject}`;
-    let isHtml = !!html;
-
-    if (isHtml) {
-      fileName += '.html';
-    } else {
-      fileName += '.txt';
-    }
+    let nowDateStr = dateFns.format(new Date(), 'YYYY-MM-DD_HH-mm-ss-x');
+    let fileName = `${nowDateStr}_${to}_${subject}.html`;
 
     let emailStubsFolder = pathHelper.getLocalRelative('./emails');
 
@@ -95,7 +90,7 @@ async function sendStubEmail(mailOptions) {
 
     let filePath = pathHelper.getLocalRelative('./emails', fileName);
 
-    fs.writeFileSync(filePath, isHtml ? html : text);
+    fs.writeFileSync(filePath, body);
   } catch (err) {
     console.log('Cannot send stub email.');
   }
