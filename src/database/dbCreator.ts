@@ -44,7 +44,7 @@ async function createIfNotExists() {
   } catch (err) {}
 }
 
-async function afterSeedRoutine(db) {
+async function beforeSeedRoutine(db) {
   if (db.sequelize.dialect.name === 'postgres') {
     //clear all tables
     await db.sequelize.query('DROP SCHEMA public CASCADE;');
