@@ -16,15 +16,11 @@ async function createDb() {
 
     const db = dbInit.init();
 
-    //clear all tables
-    await db.sequelize.query('DROP SCHEMA public CASCADE;');
-    await db.sequelize.query('CREATE SCHEMA public;');
-
-    await db.sequelize.sync({force: true});
+    await beforeSeedRoutine(db);
 
     await seeder.seedData(db);
 
-    await postImportRoutine(db);
+    await afterSeedRoutine(db);
 
     console.log('DB was seeded!');
   } catch (err) {
@@ -48,7 +44,17 @@ async function createIfNotExists() {
   } catch (err) {}
 }
 
-async function postImportRoutine(db) {
+async function afterSeedRoutine(db) {
+  if (db.sequelize.dialect.name === 'postgres') {
+    //clear all tables
+    await db.sequelize.query('DROP SCHEMA public CASCADE;');
+    await db.sequelize.query('CREATE SCHEMA public;');
+  }
+
+  await db.sequelize.sync({force: true});
+}
+
+async function afterSeedRoutine(db) {
   if (db.sequelize.dialect.name === 'postgres') {
     for (let model of _.toArray(db.models)) {
       await updatePostgresSequence(model, db);
