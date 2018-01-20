@@ -6,7 +6,7 @@
     "expiry": 86400
   },
   "db": {
-    "name": "expense-manager",
+    "name": "expense_manager",
     "username": "admin",
     "password": "password123"
   },

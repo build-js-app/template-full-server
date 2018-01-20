@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
-
-const crypto = require('crypto');
+import * as crypto from 'crypto';
 
 import dbInit from '../database/database';
 import AppError from '../appError';

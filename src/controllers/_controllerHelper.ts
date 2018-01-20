@@ -3,6 +3,7 @@ import * as Joi from 'joi';
 
 import config from '../config';
 import emailHelper from '../helpers/emailHelper';
+import logger from '../logger';
 
 export default {
   sendData,
@@ -34,6 +35,9 @@ function sendFailureMessage(error, res) {
 
   if (error.isAppError) {
     message = error.message;
+  } else {
+    //log unknown errors
+    logger.error(error);
   }
 
   res.status(statusCode).send({

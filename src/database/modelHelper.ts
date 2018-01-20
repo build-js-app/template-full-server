@@ -7,7 +7,7 @@ export default {
 };
 
 function getDbName(name) {
-  return _.upperFirst(name);
+  return _.snakeCase(name);
 }
 
 function defineForeignKey(name) {
@@ -25,7 +25,7 @@ function defineModel(name: string, fields, sequelize) {
 
   options.tableName = getDbName(name);
 
-  for (let fieldKey  of Object.keys(fields)) {
+  for (let fieldKey of Object.keys(fields)) {
     fields[fieldKey].field = getDbName(fieldKey);
   }
 
