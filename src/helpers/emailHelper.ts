@@ -89,16 +89,16 @@ function sendEmail(emailData: EmailOptions): Promise<Object> {
 
   return new Promise<Object>((resolve, reject) => {
     emailTransport.sendMail(emailData, (error, info) => {
-      if (error) return Promise.reject(error);
+      if (error) return reject(error);
 
-      return info;
+      return resolve(info);
     });
   });
 }
 
 async function sendStubEmail(mailOptions) {
   try {
-    let {from, to, subject, body} = mailOptions;
+    let {from, to, subject, html} = mailOptions;
 
     let nowDateStr = dateFns.format(new Date(), 'YYYY-MM-DD_HH-mm-ss-x');
     let fileName = `${nowDateStr}_${to}_${subject}.html`;
@@ -109,7 +109,7 @@ async function sendStubEmail(mailOptions) {
 
     let filePath = pathHelper.getLocalRelative('./emails', fileName);
 
-    fs.writeFileSync(filePath, body);
+    fs.writeFileSync(filePath, html);
   } catch (err) {
     console.log('Cannot send stub email.');
   }
