@@ -22,11 +22,7 @@ async function init() {
 
   try {
     await mongoose.connect(connectionStr, {
-      server: {
-        socketOptions: {
-          connectionTimeout: config.db.timeout
-        }
-      }
+      connectTimeoutMS: config.db.timeout
     });
   } catch (err) {
     console.error('Could not connect to MongoDB!');
