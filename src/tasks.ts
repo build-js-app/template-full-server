@@ -1,5 +1,4 @@
-import db from './database/database';
-import seeder from './database/seeders/seederDefault';
+import dbCreator from './database/dbCreator';
 
 export default {
   run,
@@ -26,12 +25,5 @@ async function run(task) {
 }
 
 async function seed() {
-  try {
-    await db.init();
-    await seeder.seedData(db);
-  } catch (err) {
-    console.error(`Data Seed error`);
-    console.log(`Check DB config values. Create DB manually if it does not exist.`);
-    console.log(`Error: ${err}`);
-  }
+  await dbCreator.createDb();
 }

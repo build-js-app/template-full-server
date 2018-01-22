@@ -1,4 +1,6 @@
 import * as dateFns from 'date-fns';
+import * as bcrypt from 'bcrypt-nodejs';
+
 import path from '../../helpers/pathHelper';
 
 export default {
@@ -12,8 +14,6 @@ async function seedData(db) {
   let userLookup = await seedUsers(db, seedData.users);
   let categoryLookup = await seedCategories(db, seedData.categories, userLookup);
   await seedRecords(db, seedData.records, userLookup, categoryLookup);
-
-  console.log('DB was seeded!');
 }
 
 async function seedUsers(db, usersData) {
@@ -24,6 +24,10 @@ async function seedUsers(db, usersData) {
   await User.remove();
 
   for (let user of usersData) {
+    let localProfile = user.profile.local;
+
+    localProfile.password = bcrypt.hashSync(localProfile.password, bcrypt.genSaltSync(8), null);
+
     let userModel = await User.create(user);
 
     userLookup[user.id] = userModel._id;

@@ -7,7 +7,7 @@
         "local": {
           "firstName": "Adam",
           "lastName": "Smith",
-          "password": "$2a$08$BTFq69dmB6KieYy5l51mnedz7qpa.4KT8GWp5xEK7bFOfIxgTlB76",
+          "password": "pas123",
           "isActivated": true
         }
       }
@@ -19,7 +19,7 @@
         "local": {
           "firstName": "Bob",
           "lastName": "Smith",
-          "password": "$2a$08$BTFq69dmB6KieYy5l51mnedz7qpa.4KT8GWp5xEK7bFOfIxgTlB76",
+          "password": "pas123",
           "isActivated": true
         }
       }
