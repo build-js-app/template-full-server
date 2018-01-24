@@ -1,0 +1,21 @@
+{
+  "port": 5000,
+  "rootUrl": "http://localhost:5000",
+  "auth": {
+    "jwtKey": "expense_manager_jwt_key",
+    "expiry": 86400
+  },
+  "db": {
+    "name": "expense_manager",
+    "username": "admin",
+    "password": "password123"
+  },
+  "email": {
+    "useStubs": true,
+    "auth": {
+      "user": "???",
+      "password": "???"
+    },
+    "fromNoReply": "noreply@buildapp.com"
+  }
+}

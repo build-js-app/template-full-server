@@ -1,0 +1,46 @@
+{
+  "name": "server",
+  "private": true,
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "nodemon --exec ts-node -- ./src/index.ts"
+  },
+  "author": "Yegor Sytnyk",
+  "license": "ISC",
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true,
+    "jsxBracketSameLine": true,
+    "bracketSpacing": false
+  },
+  "globalDependencies": {
+    "typescript": "2.2.1",
+    "nodemon": "1.11.0",
+    "ts-node": "3.0.2"
+  },
+  "dependencies": {
+    "@types/chai": "4.1.1",
+    "@types/fs-extra": "5.0.0",
+    "@types/node": "9.3.0",
+    "axios": "0.17.1",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "1.18.2",
+    "cookie-parser": "1.4.3",
+    "cookie-session": "2.0.0-beta.3",
+    "cors": "2.8.4",
+    "date-fns": "1.29.0",
+    "express": "4.16.2",
+    "fs-extra": "5.0.0",
+    "handlebars": "4.0.11",
+    "joi": "13.1.0",
+    "jsonwebtoken": "8.1.0",
+    "lodash": "4.17.4",
+    "morgan": "1.9.0",
+    "nodemailer": "4.4.1",
+    "nodemailer-sendgrid-transport": "0.2.0",
+    "pg": "7.4.1",
+    "sequelize": "4.31.2",
+    "strip-json-comments": "2.0.1",
+    "winston": "2.4.0"
+  }
+}

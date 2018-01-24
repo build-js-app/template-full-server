@@ -1,0 +1,90 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "user_a@test.com",
+      "profile": {
+        "local": {
+          "firstName": "Adam",
+          "lastName": "Smith",
+          "password": "pas123",
+          "isActivated": true
+        }
+      }
+    },
+    {
+      "id": 2,
+      "email": "user_b@test.com",
+      "profile": {
+        "local": {
+          "firstName": "Bob",
+          "lastName": "Smith",
+          "password": "pas123",
+          "isActivated": true
+        }
+      }
+    }
+  ],
+  "records": [
+    {
+      "id": 1,
+      "date": "10/06/2017",
+      "cost": 3.5,
+      "note": "coffee",
+      "userId": 1,
+      "categoryId": 1
+    },
+    {
+      "id": 2,
+      "date": "10/07/2017",
+      "cost": 14,
+      "note": "lunch",
+      "userId": 1,
+      "categoryId": 1
+    },
+    {
+      "id": 3,
+      "date": "10/08/2017",
+      "cost": 22,
+      "note": "cinema (Blade Runner)",
+      "userId": 1,
+      "categoryId": 3
+    },
+    {
+      "id": 4,
+      "date": "10/08/2017",
+      "cost": 105,
+      "note": "supermarket",
+      "userId": 1,
+      "categoryId": 1
+    },
+    {
+      "id": 5,
+      "date": "10/08/2017",
+      "cost": 24,
+      "note": "washing powder",
+      "userId": 1,
+      "categoryId": 2
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "title": "Food",
+      "description": "Food category",
+      "userId": 1
+    },
+    {
+      "id": 2,
+      "title": "Home",
+      "description": "Home category",
+      "userId": 1
+    },
+    {
+      "id": 3,
+      "title": "Entertainment",
+      "description": "Entertainment category",
+      "userId": 1
+    }
+  ]
+}
