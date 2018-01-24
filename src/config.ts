@@ -5,7 +5,6 @@ let config = {
   port: 3000,
   isDevLocal: process.env.NODE_ENV !== 'production',
   appVersion: '0.0.1',
-  parseServerUrl: '???',
   rootUrl: 'http://localhost:3000',
   auth: {
     jwtKey: '',
@@ -30,9 +29,30 @@ let config = {
   }
 };
 
+//define ENV VARs which override all other values if defined
+let envVars = {
+  rootUrl: 'ROOT_URL',
+  auth: {
+    jwtKey: 'JWT_KEY'
+  },
+  db: {
+    host: 'DB_HOST',
+    port: 'DB_PORT',
+    name: 'DB_NAME',
+    username: 'DB_USER',
+    password: 'DB_PASSWORD',
+    seedOnStart: 'DB_SEED_ON_START'
+  },
+  email: {
+    sendGridKey: 'SENDGRID_KEY'
+  }
+};
+
 configBuilder.addJsonFile(config, pathHelper.getDataRelative('config.json'), true);
 
 configBuilder.addJsonFile(config, pathHelper.getLocalRelative('config.local.json'));
+
+configBuilder.loadEnvVars(config, envVars);
 
 if (config.isDevLocal) {
   configBuilder.printConfig(config);
