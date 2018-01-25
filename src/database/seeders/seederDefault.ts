@@ -1,5 +1,6 @@
 import * as dateFns from 'date-fns';
 import * as bcrypt from 'bcrypt-nodejs';
+import * as fs from 'fs-extra';
 
 import path from '../../helpers/pathHelper';
 
@@ -9,7 +10,7 @@ export default {
 
 async function seedData(db) {
   let seedPath = path.getDataRelative('seed/seedData.json');
-  let seedData = require(seedPath);
+  let seedData = await fs.readJson(seedPath);
 
   let userLookup = await seedUsers(db, seedData.users);
   let categoryLookup = await seedCategories(db, seedData.categories, userLookup);
