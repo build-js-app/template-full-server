@@ -7,3 +7,4 @@ local/config.local.json
 shrinkwrap.yaml
 src/test.ts
 package-lock.json
+tsconfig.json
