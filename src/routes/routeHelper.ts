@@ -63,7 +63,7 @@ function setOptionsDefaults(options) {
 
 function getAuthenticatedCheckHandler() {
   return (req, res, next) => {
-    let header = req.headers['authorization'] || req.headers['Authorization'];
+    let header = req.headers['authorization'];
 
     let token = parseTokenFromHeader(header);
 
