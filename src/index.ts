@@ -6,6 +6,9 @@ if (process.env.NODE_ENV !== 'production') {
 process.on('uncaughtException', err => {
   let stack = err.stack;
   console.log(`Uncaught exception. ${err}`);
+  if (err['code'] === 'EADDRINUSE') {
+    console.error(`Port ${err['port']} is already in use.`);
+  }
 });
 
 import server from './server';
