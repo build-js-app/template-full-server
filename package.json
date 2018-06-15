@@ -23,6 +23,8 @@
     "@types/chai": "4.1.1",
     "@types/fs-extra": "5.0.0",
     "@types/node": "9.3.0",
+    "app-module-path": "2.2.0",
+    "axios": "0.17.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",

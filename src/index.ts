@@ -1,3 +1,8 @@
+//Enable absolute imports
+if (process.env.NODE_ENV !== 'production') {
+  require('app-module-path').addPath(__dirname);
+}
+
 process.on('uncaughtException', err => {
   let stack = err.stack;
   console.log(`Uncaught exception. ${err}`);
