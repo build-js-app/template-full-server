@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt-nodejs';
-import * as Joi from 'joi';
+import * as yup from 'yup';
 import * as dateFns from 'date-fns';
 import * as jwt from 'jsonwebtoken';
 
@@ -20,13 +20,14 @@ export default {
 async function signUpPost(req, res) {
   try {
     let userData = await helper.loadSchema(req.body, {
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
-      email: Joi.string()
+      firstName: yup.string().required(),
+      lastName: yup.string().required(),
+      email: yup
+        .string()
         .email()
         .required(),
-      password: Joi.string().required(),
-      confirmPassword: Joi.string().required()
+      password: yup.string().required(),
+      confirmPassword: yup.string().required()
     });
 
     if (userData.password !== userData.confirmPassword) throw new AppError('Passwords do not match.');
@@ -60,10 +61,11 @@ async function loginPost(req, res) {
     let loginSuccess = true;
 
     let userData = await helper.loadSchema(req.body, {
-      email: Joi.string()
+      email: yup
+        .string()
         .email()
         .required(),
-      password: Joi.string().required()
+      password: yup.string().required()
     });
 
     let user = await userRepository.getLocalUserByEmail(userData.email.toLowerCase());
@@ -151,7 +153,8 @@ async function activate(req, res) {
 async function forgotPassword(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      email: Joi.string()
+      email: yup
+        .string()
         .email()
         .required()
     });
@@ -194,12 +197,13 @@ async function resetPassword(req, res) {
 async function resetPasswordPost(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      email: Joi.string()
+      email: yup
+        .string()
         .email()
         .required(),
-      password: Joi.string().required(),
-      confirmPassword: Joi.string().required(),
-      token: Joi.string().required()
+      password: yup.string().required(),
+      confirmPassword: yup.string().required(),
+      token: yup.string().required()
     });
 
     if (data.password !== data.confirmPassword) throw new AppError('Passwords do not match.');

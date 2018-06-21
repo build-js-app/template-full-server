@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import * as Joi from 'joi';
+import * as yup from 'yup';
 
 import config from '../config';
 import emailHelper from '../helpers/emailHelper';
@@ -19,7 +19,7 @@ function sendFailureMessage(error, res) {
   let message = 'Server Error';
   let status = 'error';
 
-  //Joi validation error
+  //Yup validation error
   if (error.isValidationError) {
     statusCode = 400;
     message = error.message;
@@ -68,25 +68,28 @@ function loadSchema(data, schema): Promise<any> {
     stripUnknown: true
   };
 
+  const yupSchema = yup.object().shape(schema);
+
   return new Promise((resolve, reject) => {
-    Joi.validate(data, schema, validationOptions, (err, val) => {
-      if (!err) return resolve(val);
+    yupSchema
+      .validate(data, validationOptions)
+      .then(val => {
+        return resolve(val);
+      })
+      .catch(err => {
+        let error = null;
 
-      let error = null;
+        if (err.name !== 'ValidationError') {
+          error = new Error('Unsupported Validation Error');
+          return reject(err);
+        }
 
-      if (err.name !== 'ValidationError') {
-        error = new Error('Unsupported Validation Error');
-        return reject(err);
-      }
+        error = new Error('Validation Error');
+        error.isValidationError = true;
+        error.message = err.message;
 
-      let validationMessage = err.details[0].message;
-
-      error = new Error('Validation Error');
-      error.isValidationError = true;
-      error.message = validationMessage;
-
-      return reject(error);
-    });
+        return reject(error);
+      });
   });
 }
 

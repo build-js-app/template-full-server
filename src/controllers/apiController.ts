@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import * as yup from 'yup';
 
 import AppError from '../appError';
 import helper from './_controllerHelper';
@@ -43,10 +43,10 @@ async function categoryList(req, res) {
 async function saveCategory(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      category: Joi.object().keys({
-        id: Joi.string().allow(null),
-        title: Joi.string().required(),
-        description: Joi.string().required()
+      category: yup.object({
+        id: yup.string(),
+        title: yup.string().required(),
+        description: yup.string().required()
       })
     });
 
@@ -71,7 +71,7 @@ async function saveCategory(req, res) {
 async function deleteCategory(req, res) {
   try {
     let data = await helper.loadSchema(req.params, {
-      id: Joi.string().required()
+      id: yup.string().required()
     });
 
     await assertUserOwnsCategory(helper.getCurrentUser(req)._id, data.id);
@@ -89,7 +89,7 @@ async function deleteCategory(req, res) {
 async function recordList(req, res) {
   try {
     let searchQuery = await helper.loadSchema(req.query, {
-      sortBy: Joi.string().required()
+      sortBy: yup.string().required()
     });
 
     let userId = helper.getCurrentUser(req)._id;
@@ -105,12 +105,12 @@ async function recordList(req, res) {
 async function saveRecord(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      record: Joi.object().keys({
-        id: Joi.string().allow(null),
-        date: Joi.date().required(),
-        categoryId: Joi.string().required(),
-        cost: Joi.number().required(),
-        note: Joi.string().required()
+      record: yup.object({
+        id: yup.string(),
+        date: yup.date().required(),
+        categoryId: yup.string().required(),
+        cost: yup.number().required(),
+        note: yup.string().required()
       })
     });
 
@@ -135,7 +135,7 @@ async function saveRecord(req, res) {
 async function deleteRecord(req, res) {
   try {
     let data = await helper.loadSchema(req.params, {
-      id: Joi.string().required()
+      id: yup.string().required()
     });
 
     await assertUserOwnsRecord(helper.getCurrentUser(req)._id, data.id);
