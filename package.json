@@ -1,0 +1,48 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "nodemon --exec ts-node -- ./src/index.ts"
+  },
+  "author": "Erik Sytnyk",
+  "license": "ISC",
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true,
+    "jsxBracketSameLine": true,
+    "bracketSpacing": false
+  },
+  "globalDependencies": {
+    "typescript": "2.2.1",
+    "nodemon": "1.11.0",
+    "ts-node": "3.0.2"
+  },
+  "dependencies": {
+    "@types/chai": "4.2.18",
+    "@types/fs-extra": "9.0.11",
+    "@types/joi": "17.2.2",
+    "@types/lodash": "4.14.169",
+    "@types/node": "15.3.0",
+    "app-module-path": "2.2.0",
+    "axios": "0.21.1",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "1.19.0",
+    "cookie-parser": "1.4.5",
+    "cors": "2.8.5",
+    "date-fns": "2.21.3",
+    "express": "4.17.1",
+    "fs-extra": "10.0.0",
+    "handlebars": "4.7.7",
+    "joi": "17.4.0",
+    "jsonwebtoken": "8.5.1",
+    "lodash": "4.17.21",
+    "mongoose": "5.12.9",
+    "morgan": "1.10.0",
+    "nodemailer": "6.6.0",
+    "nodemailer-sendgrid-transport": "0.2.0",
+    "strip-json-comments": "3.1.1",
+    "winston": "3.3.3"
+  }
+}

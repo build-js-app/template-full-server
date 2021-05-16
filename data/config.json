@@ -1,0 +1,20 @@
+{
+  "port": 5000,
+  "rootUrl": "http://localhost:5000",
+  "auth": {
+    "jwtKey": "override_in_local_config_!!!"
+  },
+  "db": {
+    "name": "expense_manager",
+    "username": "",
+    "password": ""
+  },
+  "email": {
+    "useStubs": true,
+    "auth": {
+      "user": "???",
+      "password": "???"
+    },
+    "fromNoReply": "noreply@buildapp.com"
+  }
+}

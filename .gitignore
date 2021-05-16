@@ -1,0 +1,11 @@
+build
+local/logs
+local/emails
+node_modules
+local/config.local.json
+.idea/
+shrinkwrap.yaml
+src/test.ts
+package-lock.json
+tsconfig.json
+local/expense_manager.db
