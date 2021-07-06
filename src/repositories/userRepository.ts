@@ -1,6 +1,7 @@
 import * as crypto from 'crypto';
 
-import dbInit from '../database/database';
+import database from '../database/database';
+import {User} from '../database/entities/user';
 import AppError from '../appError';
 
 export default {
@@ -20,10 +21,6 @@ export default {
   refreshResetToken
 };
 
-const db = dbInit.init();
-
-const userModel = db.models.User;
-
 async function getUserByEmail(email) {
   const options = {
     where: {
@@ -31,7 +28,9 @@ async function getUserByEmail(email) {
     }
   };
 
-  return await userModel.findOne(options);
+  const repository = await getRepository();
+
+  return await repository.findOne(options);
 }
 
 async function getLocalUserByEmail(email: string) {
@@ -77,11 +76,15 @@ async function saveLocalAccount(user, userData) {
 }
 
 async function getUserById(id) {
-  return await userModel.findByPk(id);
+  const repository = await getRepository();
+
+  return await repository.findOne(id);
 }
 
 async function getUsers() {
-  return await userModel.findAll();
+  const repository = await getRepository();
+
+  return await repository.find();
 }
 
 async function getUserByActivationToken(token: string) {
@@ -128,11 +131,13 @@ async function updateUser(userData) {
 }
 
 async function removeUser(id) {
+  const repository = await getRepository();
+
   const user = await getUserById(id);
 
   if (!user) throw new AppError('Cannot find user by Id');
 
-  return await user.destroy();
+  return await repository.remove(user);
 }
 
 async function resetPassword(userId: number) {
@@ -182,4 +187,11 @@ async function refreshResetToken(userId: number) {
 function generateActivationToken(): string {
   const token = crypto.randomBytes(32).toString('hex');
   return token;
+}
+
+//helper function
+
+async function getRepository() {
+  const connection = await database.connect();
+  return connection.getRepository(User);
 }

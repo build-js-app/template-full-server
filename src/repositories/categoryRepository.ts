@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 
-import dbInit from '../database/database';
+import database from '../database/database';
+
+import {Category} from '../database/entities/category';
 
 export default {
   getCategoryById,
@@ -10,11 +12,10 @@ export default {
   removeCategory
 };
 
-const db = dbInit.init();
-const categoryModel = db.models.Category;
-
 async function getCategoryById(id) {
-  return await categoryModel.findByPk(id);
+  const repository = await getRepository();
+
+  return await repository.findOne(id);
 }
 
 async function getCategories(userId) {
@@ -24,7 +25,9 @@ async function getCategories(userId) {
     }
   };
 
-  const categories = await categoryModel.findAll(options);
+  const repository = await getRepository();
+
+  const categories = await repository.find(options);
 
   return _.sortBy(categories, 'title');
 }
@@ -32,22 +35,35 @@ async function getCategories(userId) {
 async function addCategory(userId, category) {
   category.userId = userId;
 
-  return await categoryModel.create(category);
+  const repository = await getRepository();
+
+  return await repository.create(category);
 }
 
 async function updateCategory(categoryData) {
-  const category = await categoryModel.findByPk(categoryData.id);
+  const repository = await getRepository();
+
+  const category = await repository.findOne(categoryData.id);
 
   if (!category) return;
 
   category.title = categoryData.title;
   category.description = categoryData.description;
 
-  return await category.save();
+  return await repository.save(category);
 }
 
 async function removeCategory(id) {
-  const category = await categoryModel.findByPk(id);
+  const repository = await getRepository();
 
-  return await category.destroy();
+  const category = await repository.findOne(id);
+
+  return await repository.remove(category);
+}
+
+//helper function
+
+async function getRepository() {
+  const connection = await database.connect();
+  return connection.getRepository(Category);
 }

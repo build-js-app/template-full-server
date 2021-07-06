@@ -1,61 +1,36 @@
+import 'reflect-metadata';
+import {Connection, createConnection} from 'typeorm';
+import {Category} from './entities/category';
+import {Record} from './entities/record';
+import {User} from './entities/user';
+
 import config from '../config';
-import pathHelper from '../helpers/pathHelper';
-import {Sequelize} from 'sequelize';
-const models = require('./models/index');
-
-import {UserModel} from '../typings/models/UserModel';
-import {CategoryModel} from '../typings/models/CategoryModel';
-import {RecordModel} from '../typings/models/RecordModel';
-
-interface Db {
-  sequelize: any;
-  models: {
-    User: UserModel;
-    Category: CategoryModel;
-    Record: RecordModel;
-  };
-}
-
-interface DbConnectionOptions {
-  dbPath?: string;
-  dbName?: string;
-}
 
 export default {
-  init
+  connect
 };
 
-function init(connectionOptions?: DbConnectionOptions): Db {
-  const sequelize = getConnection(connectionOptions);
-  const dbModels = models.init(sequelize);
+let connection = null;
 
-  return {
-    sequelize,
-    models: dbModels
-  };
-}
+async function connect(): Promise<Connection> {
+  if (connection) return connection;
 
-function getConnection(connectionOptions: DbConnectionOptions) {
-  const options: any = {
-    dialect: config.db.dialect,
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000
-    },
-    define: {
-      timestamps: false
-    },
-    //logging: console.log
-    logging: false
-  };
+  try {
+    connection = await createConnection({
+      type: 'postgres',
+      host: config.db.host,
+      port: config.db.port,
+      username: config.db.username,
+      password: config.db.password,
+      database: config.db.name,
+      entities: [Category, Record, User],
+      synchronize: true,
+      logging: false
+    });
 
-  if (config.db.dialect === 'sqlite') {
-    options.storage = pathHelper.getLocalRelative(`./${config.db.name}.db`);
-  } else {
-    options.host = config.db.host;
-    if (config.db.port) options.port = config.db.port;
+    return connection;
+  } catch (err) {
+    console.log('Cannot connect to database');
+    console.log(err);
   }
-
-  return new Sequelize(config.db.name, config.db.username, config.db.password, options);
 }

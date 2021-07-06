@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 
-import dbInit from '../database/database';
+import database from '../database/database';
+
+import {Record} from '../database/entities/record';
 
 export default {
   getRecords,
@@ -11,9 +13,6 @@ export default {
   getRecordsByCategoryId
 };
 
-const db = dbInit.init();
-const recordModel = db.models.Record;
-
 async function getRecords(userId, searchQuery) {
   const options = {
     where: {
@@ -21,40 +20,50 @@ async function getRecords(userId, searchQuery) {
     }
   };
 
-  const records = await recordModel.findAll(options);
+  const repository = await getRepository();
+
+  const records = await repository.find(options);
 
   return _.sortBy(records, searchQuery.sortBy);
 }
 
 async function getRecordById(id) {
-  return await recordModel.findByPk(id);
+  const repository = await getRepository();
+
+  return await repository.findOne(id);
 }
 
 async function addRecord(userId, record) {
+  const repository = await getRepository();
+
   record.userId = userId;
 
-  return await recordModel.create(record);
+  return await repository.save(record);
 }
 
 async function updateRecord(recordData) {
-  const record = await recordModel.findByPk(recordData.id);
+  const repository = await getRepository();
+
+  const record = await repository.findOne(recordData.id);
 
   if (!record) return;
 
   record.date = recordData.date;
   record.cost = recordData.cost;
-  record.categoryId = recordData.categoryId;
+  record.category = recordData.categoryId;
   record.note = recordData.note;
 
-  return await record.save();
+  return await repository.save(record);
 }
 
 async function removeRecord(id) {
-  const record = await recordModel.findByPk(id);
+  const repository = await getRepository();
+
+  const record = await repository.findOne(id);
 
   if (!record) return;
 
-  return await record.destroy();
+  return await repository.remove(record);
 }
 
 async function getRecordsByCategoryId(categoryId) {
@@ -64,5 +73,14 @@ async function getRecordsByCategoryId(categoryId) {
     }
   };
 
-  return await recordModel.findAll(options);
+  const repository = await getRepository();
+
+  return await repository.find(options);
+}
+
+//helper function
+
+async function getRepository() {
+  const connection = await database.connect();
+  return connection.getRepository(Record);
 }
