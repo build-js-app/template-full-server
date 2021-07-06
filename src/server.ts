@@ -64,7 +64,7 @@ function initSession() {
 
 function initErrorHandling(app) {
   //log unhandled errors
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     logger.error(err);
 
     console.log(err);

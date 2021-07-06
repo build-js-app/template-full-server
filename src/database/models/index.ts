@@ -8,14 +8,14 @@ module.exports = {
 };
 
 function initModels(sequelize) {
-  let result = {};
+  const result = {};
 
-  for (let modelInit of models) {
-    let model = modelInit.init(sequelize, Sequelize);
+  for (const modelInit of models) {
+    const model = modelInit.init(sequelize, Sequelize);
     result[_.upperFirst(model.name)] = model;
   }
 
-  for (let modelName of Object.keys(result)) {
+  for (const modelName of Object.keys(result)) {
     if (result[modelName].associate) {
       result[modelName].associate(result);
     }

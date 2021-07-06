@@ -1,7 +1,7 @@
 import helper from '../modelHelper';
 
 export function init(sequelize, DataTypes) {
-  let fields = {
+  const fields = {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -18,7 +18,7 @@ export function init(sequelize, DataTypes) {
     }
   };
 
-  let model = helper.defineModel('category', fields, sequelize);
+  const model = helper.defineModel('category', fields, sequelize);
 
   model.associate = models => {
     model.hasMany(models.Record, {

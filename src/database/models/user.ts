@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt-nodejs';
 import helper from '../modelHelper';
 
 export function init(sequelize, DataTypes) {
-  let fields = {
+  const fields = {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -20,7 +20,7 @@ export function init(sequelize, DataTypes) {
     }
   };
 
-  let model = helper.defineModel('user', fields, sequelize);
+  const model = helper.defineModel('user', fields, sequelize);
 
   model.associate = models => {
     model.hasMany(models.Record, {

@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import dbInit from '../database/database';
 
 export default {
-  init,
   getCategoryById,
   getCategories,
   addCategory,
@@ -12,24 +11,20 @@ export default {
 };
 
 const db = dbInit.init();
-let categoryModel = db.models.Category;
-
-function init(db) {
-  categoryModel = db.models.Category;
-}
+const categoryModel = db.models.Category;
 
 async function getCategoryById(id) {
   return await categoryModel.findByPk(id);
 }
 
 async function getCategories(userId) {
-  let options = {
+  const options = {
     where: {
       userId: userId
     }
   };
 
-  let categories = await categoryModel.findAll(options);
+  const categories = await categoryModel.findAll(options);
 
   return _.sortBy(categories, 'title');
 }
@@ -41,7 +36,7 @@ async function addCategory(userId, category) {
 }
 
 async function updateCategory(categoryData) {
-  let category = await categoryModel.findByPk(categoryData.id);
+  const category = await categoryModel.findByPk(categoryData.id);
 
   if (!category) return;
 
@@ -52,7 +47,7 @@ async function updateCategory(categoryData) {
 }
 
 async function removeCategory(id) {
-  let category = await categoryModel.findByPk(id);
+  const category = await categoryModel.findByPk(id);
 
   return await category.destroy();
 }

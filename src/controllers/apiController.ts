@@ -18,9 +18,9 @@ export default {
 
 async function getCurrentUser(req, res) {
   try {
-    let userId = helper.getCurrentUser(req).id;
+    const userId = helper.getCurrentUser(req).id;
 
-    let user = await userRepository.getUserById(userId);
+    const user = await userRepository.getUserById(userId);
 
     return helper.sendData(user, res);
   } catch (err) {
@@ -30,9 +30,9 @@ async function getCurrentUser(req, res) {
 
 async function categoriesList(req, res) {
   try {
-    let userId = helper.getCurrentUser(req).id;
+    const userId = helper.getCurrentUser(req).id;
 
-    let records = await categoryRepository.getCategories(userId);
+    const records = await categoryRepository.getCategories(userId);
 
     return helper.sendData(records, res);
   } catch (err) {
@@ -42,7 +42,7 @@ async function categoriesList(req, res) {
 
 async function saveCategory(req, res) {
   try {
-    let data = await helper.loadSchema(req.body, {
+    const data = await helper.loadSchema(req.body, {
       category: Joi.object()
         .unknown(true)
         .keys({
@@ -52,7 +52,7 @@ async function saveCategory(req, res) {
         })
     });
 
-    let userId = helper.getCurrentUser(req).id;
+    const userId = helper.getCurrentUser(req).id;
 
     let category = null;
 
@@ -72,11 +72,11 @@ async function saveCategory(req, res) {
 
 async function deleteCategory(req, res) {
   try {
-    let data = await helper.loadSchema(req.params, {
+    const data = await helper.loadSchema(req.params, {
       id: Joi.string().required()
     });
 
-    let userId = helper.getCurrentUser(req).id;
+    const userId = helper.getCurrentUser(req).id;
 
     await assertThatUserOwnsCategory(userId, data.id);
 
@@ -92,13 +92,13 @@ async function deleteCategory(req, res) {
 
 async function recordsList(req, res) {
   try {
-    let searchQuery = await helper.loadSchema(req.query, {
+    const searchQuery = await helper.loadSchema(req.query, {
       sortBy: Joi.string().required()
     });
 
-    let userId = helper.getCurrentUser(req).id;
+    const userId = helper.getCurrentUser(req).id;
 
-    let records = await recordRepository.getRecords(userId, searchQuery);
+    const records = await recordRepository.getRecords(userId, searchQuery);
 
     return helper.sendData(records, res);
   } catch (err) {
@@ -108,7 +108,7 @@ async function recordsList(req, res) {
 
 async function saveRecord(req, res) {
   try {
-    let data = await helper.loadSchema(req.body, {
+    const data = await helper.loadSchema(req.body, {
       record: Joi.object()
         .unknown(true)
         .keys({
@@ -120,7 +120,7 @@ async function saveRecord(req, res) {
         })
     });
 
-    let userId = helper.getCurrentUser(req).id;
+    const userId = helper.getCurrentUser(req).id;
 
     let record = null;
 
@@ -140,11 +140,11 @@ async function saveRecord(req, res) {
 
 async function deleteRecord(req, res) {
   try {
-    let data = await helper.loadSchema(req.params, {
+    const data = await helper.loadSchema(req.params, {
       id: Joi.number().required()
     });
 
-    let userId = helper.getCurrentUser(req).id;
+    const userId = helper.getCurrentUser(req).id;
 
     await assertThatUserOwnsRecord(userId, data.id);
 
@@ -157,25 +157,25 @@ async function deleteRecord(req, res) {
 }
 
 async function assertThatUserOwnsCategory(userId, categoryId) {
-  let category = await categoryRepository.getCategoryById(categoryId);
+  const category = await categoryRepository.getCategoryById(categoryId);
 
-  let hasRights = category && category.userId === userId;
+  const hasRights = category && category.userId === userId;
 
   if (!hasRights) throw new AppError('User does not own category');
 }
 
 async function assertThatUserOwnsRecord(userId, recordId) {
-  let record = await recordRepository.getRecordById(recordId);
+  const record = await recordRepository.getRecordById(recordId);
 
-  let hasRights = record && record.userId === userId;
+  const hasRights = record && record.userId === userId;
 
   if (!hasRights) throw new AppError('User does not own record');
 }
 
 async function checkThatNoRecordsForCategory(categoryId) {
-  let records = await recordRepository.getRecordsByCategoryId(categoryId);
+  const records = await recordRepository.getRecordsByCategoryId(categoryId);
 
-  let hasRecords = records && records.length;
+  const hasRecords = records && records.length;
 
   if (hasRecords) throw new AppError('Cannot delete category with records');
 }

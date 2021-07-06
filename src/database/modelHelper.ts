@@ -18,14 +18,14 @@ function defineForeignKey(name) {
 }
 
 function defineModel(name: string, fields, sequelize) {
-  let options = {
+  const options = {
     freezeTableName: true,
     tableName: null
   };
 
   options.tableName = getDbName(name);
 
-  for (let fieldKey of Object.keys(fields)) {
+  for (const fieldKey of Object.keys(fields)) {
     fields[fieldKey].field = getDbName(fieldKey);
   }
 

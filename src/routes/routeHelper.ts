@@ -17,25 +17,25 @@ function init(expressApp) {
 }
 
 function getRout(route, handler, options = {}) {
-  let handlers = getHandlers(handler, options);
+  const handlers = getHandlers(handler, options);
 
   app.get(route, handlers);
 }
 
 function putRout(route, handler, options = {}) {
-  let handlers = getHandlers(handler, options);
+  const handlers = getHandlers(handler, options);
 
   app.put(route, handlers);
 }
 
 function postRout(route, handler, options = {}) {
-  let handlers = getHandlers(handler, options);
+  const handlers = getHandlers(handler, options);
 
   app.post(route, handlers);
 }
 
 function deleteRout(route, handler, options = {}) {
-  let handlers = getHandlers(handler, options);
+  const handlers = getHandlers(handler, options);
 
   app.delete(route, handlers);
 }
@@ -43,7 +43,7 @@ function deleteRout(route, handler, options = {}) {
 function getHandlers(handler, options) {
   setOptionsDefaults(options);
 
-  let handlers = [];
+  const handlers = [];
 
   handlers.push(getDecodeJwtHandler());
 
@@ -65,7 +65,7 @@ function setOptionsDefaults(options) {
 
 function getAuthenticatedCheckHandler() {
   return (req, res, next) => {
-    let isAuthenticated = !!req.currentUser;
+    const isAuthenticated = !!req.currentUser;
 
     if (isAuthenticated) return next();
 
@@ -80,7 +80,7 @@ function getDecodeJwtHandler() {
     if (req.cookies && req.cookies['jwt_token']) {
       token = req.cookies['jwt_token'];
     } else {
-      let header = req.headers['authorization'];
+      const header = req.headers['authorization'];
 
       token = parseTokenFromHeader(header);
     }
@@ -105,7 +105,7 @@ function getDecodeJwtHandler() {
   function parseTokenFromHeader(header) {
     if (!header) return null;
 
-    let prefix = 'Bearer ';
+    const prefix = 'Bearer ';
 
     if (!_.startsWith(header, prefix)) return null;
 

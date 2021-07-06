@@ -1,7 +1,7 @@
 import pathHelper from './helpers/pathHelper';
 import configBuilder from './helpers/configHelper';
 
-let config = {
+const config = {
   port: 3000,
   isDevLocal: process.env.NODE_ENV !== 'production',
   appVersion: '0.0.1',
@@ -31,7 +31,7 @@ let config = {
 };
 
 //define ENV VARs which override all other values if defined
-let envVars = {
+const envVars = {
   rootUrl: 'ROOT_URL',
   auth: {
     jwtKey: 'JWT_KEY'

@@ -26,7 +26,7 @@ function sendFailureMessage(error, res) {
     status = 'validation error';
   }
 
-  let mongooseError = _.get(error, 'response.data.error');
+  const mongooseError = _.get(error, 'response.data.error');
   if (mongooseError) {
     statusCode = 400;
     message = `Schema validation error: ${mongooseError}`;
@@ -57,7 +57,7 @@ async function loadSchema(data, schemaObject): Promise<any> {
   const schema = Joi.object(schemaObject);
 
   try {
-    let value = await schema.validateAsync(data);
+    const value = await schema.validateAsync(data);
     return value;
   } catch (err) {
     let error = null;
@@ -67,7 +67,7 @@ async function loadSchema(data, schemaObject): Promise<any> {
       return err;
     }
 
-    let validationMessage = err.details[0].message;
+    const validationMessage = err.details[0].message;
 
     error = new Error('Validation Error');
     error.isValidationError = true;
@@ -78,7 +78,7 @@ async function loadSchema(data, schemaObject): Promise<any> {
 }
 
 function sendActivationEmail(email, token) {
-  let data = {
+  const data = {
     token,
     siteRootUrl: config.rootUrl
   };
@@ -90,7 +90,7 @@ function sendActivationEmail(email, token) {
 }
 
 function sendResetPasswordEmail(email, token) {
-  let data = {
+  const data = {
     token,
     siteRootUrl: config.rootUrl
   };

@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import dbInit from '../database/database';
 
 export default {
-  init,
   getRecords,
   getRecordById,
   addRecord,
@@ -13,20 +12,16 @@ export default {
 };
 
 const db = dbInit.init();
-let recordModel = db.models.Record;
-
-function init(db) {
-  recordModel = db.models.Record;
-}
+const recordModel = db.models.Record;
 
 async function getRecords(userId, searchQuery) {
-  let options = {
+  const options = {
     where: {
       userId: userId
     }
   };
 
-  let records = await recordModel.findAll(options);
+  const records = await recordModel.findAll(options);
 
   return _.sortBy(records, searchQuery.sortBy);
 }
@@ -42,7 +37,7 @@ async function addRecord(userId, record) {
 }
 
 async function updateRecord(recordData) {
-  let record = await recordModel.findByPk(recordData.id);
+  const record = await recordModel.findByPk(recordData.id);
 
   if (!record) return;
 
@@ -55,7 +50,7 @@ async function updateRecord(recordData) {
 }
 
 async function removeRecord(id) {
-  let record = await recordModel.findByPk(id);
+  const record = await recordModel.findByPk(id);
 
   if (!record) return;
 
@@ -63,7 +58,7 @@ async function removeRecord(id) {
 }
 
 async function getRecordsByCategoryId(categoryId) {
-  let options = {
+  const options = {
     where: {
       categoryId: categoryId
     }

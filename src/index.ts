@@ -4,7 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 process.on('uncaughtException', err => {
-  let stack = err.stack;
+  const stack = err.stack;
   console.log(`Uncaught exception. ${err}`);
   if (err['code'] === 'EADDRINUSE') {
     console.error(`Port ${err['port']} is already in use.`);
@@ -21,15 +21,15 @@ async function start() {
     await tasks.seed();
   }
 
-  let port = await server.start(process.env.PORT || config.port);
+  const port = await server.start(process.env.PORT || config.port);
 
   console.log(`Server is listening on port ${port}!`);
 
   logger.info(`Server started.`);
 }
 
-let run = async () => {
-  let args = process.argv;
+const run = async () => {
+  const args = process.argv;
 
   //run task
   if (args[2] === 'run') {

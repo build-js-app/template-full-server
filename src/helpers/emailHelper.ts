@@ -45,7 +45,7 @@ function getEmailTransport() {
 
 async function sendEmailTemplate(templateName: string, emailData: Object, emailOptions: EmailOptions) {
   try {
-    let response = await renderTemplate(templateName, emailData);
+    const response = await renderTemplate(templateName, emailData);
 
     emailOptions.html = response.body;
 
@@ -62,20 +62,20 @@ async function sendEmailTemplate(templateName: string, emailData: Object, emailO
 }
 
 async function renderTemplate(name: string, data: Object): Promise<any> {
-  let result = {
+  const result = {
     body: null,
     subject: null
   };
 
-  let bodyFileName = pathHelper.getDataRelative('emails', name, 'body.hbs');
-  let bodyExists = await fs.pathExists(bodyFileName);
+  const bodyFileName = pathHelper.getDataRelative('emails', name, 'body.hbs');
+  const bodyExists = await fs.pathExists(bodyFileName);
 
   if (!bodyExists) throw new Error(`Cannot find email template file at ${bodyFileName}`);
 
   result.body = await templateRenderer.renderTemplate(bodyFileName, data);
 
-  let subjectFileName = pathHelper.getDataRelative('emails', name, 'subject.hbs');
-  let subjectExists = await fs.pathExists(bodyFileName);
+  const subjectFileName = pathHelper.getDataRelative('emails', name, 'subject.hbs');
+  const subjectExists = await fs.pathExists(bodyFileName);
 
   if (subjectExists) {
     result.subject = await templateRenderer.renderTemplate(subjectFileName, data);
@@ -85,7 +85,7 @@ async function renderTemplate(name: string, data: Object): Promise<any> {
 }
 
 function sendEmail(emailData: EmailOptions): Promise<Object> {
-  let emailTransport = getEmailTransport();
+  const emailTransport = getEmailTransport();
 
   return new Promise<Object>((resolve, reject) => {
     emailTransport.sendMail(emailData, (error, info) => {
@@ -98,16 +98,16 @@ function sendEmail(emailData: EmailOptions): Promise<Object> {
 
 async function sendStubEmail(mailOptions) {
   try {
-    let {from, to, subject, html} = mailOptions;
+    const {from, to, subject, html} = mailOptions;
 
-    let nowDateStr = dateFns.format(new Date(), 'yyyy-MM-dd_HH-mm-ss-x');
-    let fileName = `${nowDateStr}_${to}_${subject}.html`;
+    const nowDateStr = dateFns.format(new Date(), 'yyyy-MM-dd_HH-mm-ss-x');
+    const fileName = `${nowDateStr}_${to}_${subject}.html`;
 
-    let emailStubsFolder = pathHelper.getLocalRelative('./emails');
+    const emailStubsFolder = pathHelper.getLocalRelative('./emails');
 
     fs.ensureDirSync(emailStubsFolder);
 
-    let filePath = pathHelper.getLocalRelative('./emails', fileName);
+    const filePath = pathHelper.getLocalRelative('./emails', fileName);
 
     fs.writeFileSync(filePath, html);
   } catch (err) {

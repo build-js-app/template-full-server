@@ -32,11 +32,11 @@ async function createDb() {
 }
 
 async function createIfNotExists() {
-  let {host, name: dbName, username, password} = config.db;
-  let connectionString = `postgres://${username}:${password}@${host}/postgres`;
+  const {host, name: dbName, username, password} = config.db;
+  const connectionString = `postgres://${username}:${password}@${host}/postgres`;
 
   try {
-    let client = new Client({connectionString});
+    const client = new Client({connectionString});
     client.connect();
 
     await client.query(`CREATE DATABASE "${dbName}"`);
@@ -57,18 +57,18 @@ async function beforeSeedRoutine(db) {
 
 async function afterSeedRoutine(db) {
   if (db.sequelize.dialect.name === 'postgres') {
-    for (let model of _.toArray(db.models)) {
+    for (const model of _.toArray(db.models)) {
       await updatePostgresSequence(model, db);
     }
   }
 }
 
 function updatePostgresSequence(model, db) {
-  let tableName = model.tableName;
+  const tableName = model.tableName;
 
-  let idField = model.autoIncrementAttribute;
+  const idField = model.autoIncrementAttribute;
 
-  let sql = `SELECT setval('"${tableName}_id_seq"', (SELECT MAX("${idField}") FROM "${tableName}"));`;
+  const sql = `SELECT setval('"${tableName}_id_seq"', (SELECT MAX("${idField}") FROM "${tableName}"));`;
 
   return db.sequelize.query(sql);
 }

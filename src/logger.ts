@@ -12,12 +12,12 @@ export default {
 };
 
 async function initLoggers() {
-  let logPath = pathHelper.getLocalRelative('./logs');
+  const logPath = pathHelper.getLocalRelative('./logs');
 
   await fs.ensureDirSync(logPath);
 
-  let errorLogPath = pathHelper.getLocalRelative('./logs/errors.log');
-  let infoLogPath = pathHelper.getLocalRelative('./logs/info.log');
+  const errorLogPath = pathHelper.getLocalRelative('./logs/errors.log');
+  const infoLogPath = pathHelper.getLocalRelative('./logs/info.log');
 
   errorLogger = winston.createLogger({
     transports: [new winston.transports.File({filename: errorLogPath})]

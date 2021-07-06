@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-let profileData = {
+const profileData = {
   production: {
     root: '../',
     data: './data',
@@ -15,7 +15,7 @@ let profileData = {
   }
 };
 
-let rootPath = getRootPath();
+const rootPath = getRootPath();
 
 export default {
   path,
@@ -38,7 +38,7 @@ function getClientRelativePath(...paths) {
 }
 
 function getRelativePath(profileFolder, ...paths: string[]) {
-  let folderRelative = profileData[getCurrentProfile()][profileFolder];
+  const folderRelative = profileData[getCurrentProfile()][profileFolder];
 
   if (!folderRelative) throw Error(`Cannot find relative folder profile '${profileFolder}'`);
 
@@ -54,7 +54,7 @@ function getRootPath() {
     profileData.development.root = '../..';
   }
 
-  let rootRelative = profileData[getCurrentProfile()].root;
+  const rootRelative = profileData[getCurrentProfile()].root;
 
   if (!rootRelative) throw Error('Cannot find root folder');
 
@@ -62,7 +62,7 @@ function getRootPath() {
 }
 
 function getCurrentProfile() {
-  let env = process.env['NODE_ENV'];
+  const env = process.env['NODE_ENV'];
 
   return env ? env : 'development';
 }

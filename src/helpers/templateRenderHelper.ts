@@ -5,16 +5,16 @@ export default {
   renderTemplate
 };
 
-let templatesCache = {};
+const templatesCache = {};
 
 async function renderTemplate(templatePath: string, data) {
   if (!templatesCache[templatePath]) {
-    let source = await readFile(templatePath);
+    const source = await readFile(templatePath);
 
     templatesCache[templatePath] = hbs.compile(source);
   }
 
-  let template = templatesCache[templatePath];
+  const template = templatesCache[templatePath];
 
   return template(data);
 }

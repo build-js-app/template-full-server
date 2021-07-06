@@ -10,9 +10,9 @@ export default {
 
 function addJsonFile(config, path, required = false) {
   try {
-    let fileVal = fs.readFileSync(path, {encoding: 'utf8'});
+    const fileVal = fs.readFileSync(path, {encoding: 'utf8'});
 
-    let fileJson = JSON.parse(stripJsonComments(fileVal));
+    const fileJson = JSON.parse(stripJsonComments(fileVal));
 
     _.merge(config, fileJson);
   } catch (err) {
@@ -29,12 +29,12 @@ function loadEnvVars(config, envVars) {
 function loadEnvVarsValues(config, envVars, path) {
   _.forOwn(envVars, (value, key) => {
     if (_.isString(value)) {
-      let newPath = _.clone(path);
+      const newPath = _.clone(path);
       newPath.push(key);
 
       loadEnvVarValue(config, newPath, value);
     } else if (_.isObject(value)) {
-      let newPath = _.clone(path);
+      const newPath = _.clone(path);
       newPath.push(key);
 
       loadEnvVarsValues(config, value, newPath);

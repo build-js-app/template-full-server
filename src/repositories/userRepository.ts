@@ -4,7 +4,6 @@ import dbInit from '../database/database';
 import AppError from '../appError';
 
 export default {
-  init,
   getUserByEmail,
   getLocalUserByEmail,
   saveLocalAccount,
@@ -23,14 +22,10 @@ export default {
 
 const db = dbInit.init();
 
-let userModel = db.models.User;
-
-function init(db) {
-  userModel = db.models.User;
-}
+const userModel = db.models.User;
 
 async function getUserByEmail(email) {
-  let options = {
+  const options = {
     where: {
       email
     }
@@ -40,9 +35,9 @@ async function getUserByEmail(email) {
 }
 
 async function getLocalUserByEmail(email: string) {
-  let user = await getUserByEmail(email);
+  const user = await getUserByEmail(email);
 
-  let noLocalProfile = !user || !user.profile.local;
+  const noLocalProfile = !user || !user.profile.local;
 
   if (noLocalProfile) return null;
 
@@ -50,14 +45,14 @@ async function getLocalUserByEmail(email: string) {
 }
 
 async function saveLocalAccount(user, userData) {
-  let localProfile: any = {};
+  const localProfile: any = {};
 
   localProfile.firstName = userData.firstName;
   localProfile.lastName = userData.lastName;
   localProfile.email = userData.email;
   localProfile.password = (userModel as any).generateHash(userData.password);
 
-  let activationToken = generateActivationToken();
+  const activationToken = generateActivationToken();
   localProfile.activation = {
     token: activationToken,
     created: new Date()
@@ -90,9 +85,9 @@ async function getUsers() {
 }
 
 async function getUserByActivationToken(token: string) {
-  let users = await getUsers();
+  const users = await getUsers();
 
-  let findUser = users.find(user => {
+  const findUser = users.find(user => {
     return user?.profile?.local?.activation && user?.profile?.local?.activation?.token === token;
   });
 
@@ -100,7 +95,7 @@ async function getUserByActivationToken(token: string) {
 }
 
 async function refreshActivationToken(userId: number) {
-  let user = await getUserById(userId);
+  const user = await getUserById(userId);
 
   if (!user) throw new AppError('');
 
@@ -111,7 +106,7 @@ async function refreshActivationToken(userId: number) {
 }
 
 async function activateUser(userId: number) {
-  let user = await getUserById(userId);
+  const user = await getUserById(userId);
 
   if (!user) throw new AppError('User not found.');
 
@@ -122,7 +117,7 @@ async function activateUser(userId: number) {
 }
 
 async function updateUser(userData) {
-  let user = await getUserByEmail(userData.email.toLowerCase());
+  const user = await getUserByEmail(userData.email.toLowerCase());
 
   if (!user) throw new AppError('Cannot find user by Id');
 
@@ -133,7 +128,7 @@ async function updateUser(userData) {
 }
 
 async function removeUser(id) {
-  let user = await getUserById(id);
+  const user = await getUserById(id);
 
   if (!user) throw new AppError('Cannot find user by Id');
 
@@ -141,7 +136,7 @@ async function removeUser(id) {
 }
 
 async function resetPassword(userId: number) {
-  let user = await getUserById(userId);
+  const user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user by Id');
 
@@ -152,7 +147,7 @@ async function resetPassword(userId: number) {
 }
 
 async function updateUserPassword(userId: number, password: string) {
-  let user = await getUserById(userId);
+  const user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user');
 
@@ -163,10 +158,10 @@ async function updateUserPassword(userId: number, password: string) {
 }
 
 async function getUserByResetToken(token: string) {
-  let users = await getUsers();
+  const users = await getUsers();
 
-  let findUser = users.find(user => {
-    let local = user.profile.local;
+  const findUser = users.find(user => {
+    const local = user.profile.local;
     return local?.reset && local?.reset?.token === token;
   });
 
@@ -174,7 +169,7 @@ async function getUserByResetToken(token: string) {
 }
 
 async function refreshResetToken(userId: number) {
-  let user = await getUserById(userId);
+  const user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user');
 
@@ -185,6 +180,6 @@ async function refreshResetToken(userId: number) {
 }
 
 function generateActivationToken(): string {
-  let token = crypto.randomBytes(32).toString('hex');
+  const token = crypto.randomBytes(32).toString('hex');
   return token;
 }

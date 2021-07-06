@@ -19,12 +19,10 @@ export default {
 
 async function signUpPost(req, res) {
   try {
-    let userData = await helper.loadSchema(req.body, {
+    const userData = await helper.loadSchema(req.body, {
       firstName: Joi.string().required(),
       lastName: Joi.string().required(),
-      email: Joi.string()
-        .email()
-        .required(),
+      email: Joi.string().email().required(),
       password: Joi.string().required(),
       confirmPassword: Joi.string().required()
     });
@@ -36,9 +34,9 @@ async function signUpPost(req, res) {
 
     if (helper.getCurrentUser(req)) throw new AppError('Log out before signing up.');
 
-    let localUser = await userRepository.getLocalUserByEmail(userData.email);
+    const localUser = await userRepository.getLocalUserByEmail(userData.email);
 
-    let alreadyActivated = localUser && localUser.profile.local.isActivated;
+    const alreadyActivated = localUser && localUser.profile.local.isActivated;
     if (alreadyActivated) throw new AppError('This email is already activated.');
 
     let user = await userRepository.getUserByEmail(userData.email);
@@ -47,7 +45,7 @@ async function signUpPost(req, res) {
 
     await helper.sendActivationEmail(user.email, user.profile.local.activation.token);
 
-    let message = 'Activation email was send. Please, check you inbox.';
+    const message = 'Activation email was send. Please, check you inbox.';
 
     return helper.sendData({message}, res);
   } catch (err) {
@@ -59,14 +57,12 @@ async function loginPost(req, res) {
   try {
     let loginSuccess = true;
 
-    let userData = await helper.loadSchema(req.body, {
-      email: Joi.string()
-        .email()
-        .required(),
+    const userData = await helper.loadSchema(req.body, {
+      email: Joi.string().email().required(),
       password: Joi.string().required()
     });
 
-    let user = await userRepository.getLocalUserByEmail(userData.email.toLowerCase());
+    const user = await userRepository.getLocalUserByEmail(userData.email.toLowerCase());
 
     if (!user) {
       throw new AppError('The email address or password that you entered is not valid');
@@ -78,7 +74,7 @@ async function loginPost(req, res) {
       );
 
     if (user) {
-      let isValidPassword = bcrypt.compareSync(userData.password, user.profile.local.password);
+      const isValidPassword = bcrypt.compareSync(userData.password, user.profile.local.password);
 
       if (!isValidPassword) loginSuccess = false;
     } else {
@@ -89,11 +85,11 @@ async function loginPost(req, res) {
       throw new AppError('The email address or password that you entered is not valid');
     }
 
-    let token = jwt.sign(user.dataValues, config.auth.jwtKey, {
+    const token = jwt.sign(user.dataValues, config.auth.jwtKey, {
       expiresIn: config.auth.expiry
     });
 
-    let result = {
+    const result = {
       token,
       user
     };
@@ -108,9 +104,9 @@ async function activate(req, res) {
   try {
     let data = {};
 
-    let token = req.params.token;
+    const token = req.params.token;
 
-    let localUser: any = await userRepository.getUserByActivationToken(token);
+    const localUser: any = await userRepository.getUserByActivationToken(token);
 
     if (!localUser) {
       data = {
@@ -121,11 +117,11 @@ async function activate(req, res) {
       return helper.sendData(data, res);
     }
 
-    let activationTime = localUser.profile.local.activation.created;
-    let isTokenExpired = dateFns.differenceInHours(activationTime, new Date()) > 24;
+    const activationTime = localUser.profile.local.activation.created;
+    const isTokenExpired = dateFns.differenceInHours(activationTime, new Date()) > 24;
 
     if (isTokenExpired) {
-      let user = await userRepository.refreshActivationToken(localUser.id);
+      const user = await userRepository.refreshActivationToken(localUser.id);
 
       await helper.sendActivationEmail(user.email, user.profile.local.activation.token);
 
@@ -152,23 +148,21 @@ async function activate(req, res) {
 
 async function forgotPassword(req, res) {
   try {
-    let data = await helper.loadSchema(req.body, {
-      email: Joi.string()
-        .email()
-        .required()
+    const data = await helper.loadSchema(req.body, {
+      email: Joi.string().email().required()
     });
 
-    let email = data.email.toLowerCase();
+    const email = data.email.toLowerCase();
 
-    let localUser = await userRepository.getLocalUserByEmail(email);
+    const localUser = await userRepository.getLocalUserByEmail(email);
 
     if (!localUser) throw new AppError('There is no user with provided email.');
 
-    let updatedUser = await userRepository.resetPassword(localUser.id);
+    const updatedUser = await userRepository.resetPassword(localUser.id);
 
     await helper.sendResetPasswordEmail(updatedUser.email, updatedUser.profile.local.reset.token);
 
-    let message = `We've just dropped you an email. Please check your mail to reset your password. Thanks!`;
+    const message = `We've just dropped you an email. Please check your mail to reset your password. Thanks!`;
 
     return helper.sendData({message}, res);
   } catch (err) {
@@ -178,11 +172,11 @@ async function forgotPassword(req, res) {
 
 async function resetPassword(req, res) {
   try {
-    let token = req.params.token;
+    const token = req.params.token;
 
-    let localUser: any = await getUserByResetToken(token);
+    const localUser: any = await getUserByResetToken(token);
 
-    let data = {
+    const data = {
       email: localUser.email,
       token: token
     };
@@ -195,10 +189,8 @@ async function resetPassword(req, res) {
 
 async function resetPasswordPost(req, res) {
   try {
-    let data = await helper.loadSchema(req.body, {
-      email: Joi.string()
-        .email()
-        .required(),
+    const data = await helper.loadSchema(req.body, {
+      email: Joi.string().email().required(),
       password: Joi.string().required(),
       confirmPassword: Joi.string().required(),
       token: Joi.string().required()
@@ -206,11 +198,11 @@ async function resetPasswordPost(req, res) {
 
     if (data.password !== data.confirmPassword) throw new AppError('Passwords do not match.');
 
-    let localUser: any = await getUserByResetToken(data.token);
+    const localUser: any = await getUserByResetToken(data.token);
 
     await userRepository.updateUserPassword(localUser.id, data.password);
 
-    let message = 'Your password was reset successfully.';
+    const message = 'Your password was reset successfully.';
 
     helper.sendData({message}, res);
   } catch (err) {
@@ -221,16 +213,16 @@ async function resetPasswordPost(req, res) {
 async function getUserByResetToken(token) {
   if (!token) throw new AppError('No reset token provided.');
 
-  let localUser: any = await userRepository.getUserByResetToken(token);
+  const localUser: any = await userRepository.getUserByResetToken(token);
 
   if (!localUser) throw new AppError('Wrong reset password token.');
 
-  let activationTime = localUser.profile.local.reset.created;
+  const activationTime = localUser.profile.local.reset.created;
 
-  let isTokenExpired = dateFns.differenceInHours(activationTime, new Date()) > 24;
+  const isTokenExpired = dateFns.differenceInHours(activationTime, new Date()) > 24;
 
   if (isTokenExpired) {
-    let user = await userRepository.refreshResetToken(localUser.id);
+    const user = await userRepository.refreshResetToken(localUser.id);
 
     await helper.sendResetPasswordEmail(user.email, user.profile.local.reset.token);
 

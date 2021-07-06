@@ -36,7 +36,7 @@ function init(connectionOptions?: DbConnectionOptions): Db {
 }
 
 function getConnection(connectionOptions: DbConnectionOptions) {
-  let options: any = {
+  const options: any = {
     dialect: config.db.dialect,
     pool: {
       max: 5,
