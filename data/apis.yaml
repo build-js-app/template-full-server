@@ -1,0 +1,310 @@
+openapi: 3.0.0
+servers:
+  - description: Local
+    url: http://localhost:5000/
+info:
+  description: Server template for build-app. Project "full".
+  version: '1.0.0'
+  title: Full Template
+tags:
+  - name: 'User'
+    description: 'Operations about user'
+    externalDocs:
+      description: 'Find out more about our store'
+      url: 'http://swagger.io'
+  - name: 'Category'
+    description: 'Everything about your Categories'
+    externalDocs:
+      description: 'Find out more'
+      url: 'http://swagger.io'
+  - name: 'Record'
+    description: 'Everything about Records'
+paths:
+  /api/current-user:
+    get:
+      tags:
+        - 'User'
+      summary: Get current user
+      responses:
+        '200':
+          description: user found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/login:
+    post:
+      tags:
+        - 'User'
+      summary: user login
+      operationId: userLogin
+      description: |
+        Login user by email/password
+      responses:
+        '201':
+          description: successfull login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: 'object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginInfo'
+        description: User login info
+  /api/sign-up:
+    post:
+      tags:
+        - 'User'
+      summary: user sign up
+      operationId: userSignUp
+      description: |
+        Create new user with provided email/password
+      responses:
+        '201':
+          description: successfull sign up
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpResponse'
+        '409':
+          description: 'server error'
+        '400':
+          description: 'object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignUpRequest'
+        description: Sign up info (email/password)
+  /api/activate/{token}:
+    get:
+      tags:
+        - 'User'
+      summary: user activation
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+            required: ['token']
+            description: Activation token
+      responses:
+        '200':
+          description: successfully activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivationResponse'
+  /api/categories:
+    get:
+      tags:
+        - 'Category'
+      summary: Get all categories
+      responses:
+        '200':
+          description: list of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '400':
+          description: 'Invalid status value'
+  /api/category:
+    post:
+      tags:
+        - 'Category'
+      summary: Add new category to the data base
+      operationId: categoryAdd
+      responses:
+        '200':
+          description: category added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        description: Category object that needs to be added to the db
+  /api/category/{id}:
+    delete:
+      tags:
+        - 'Category'
+      summary: Remove category by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            required: ['id']
+            description: ID of the category to get
+      responses:
+        '200':
+          description: category removed
+  /api/records:
+    get:
+      tags:
+        - 'Record'
+      summary: Get all records
+      parameters:
+        - in: query
+          name: sortBy
+          required: true
+          schema:
+            type: string
+            required: ['sortBy']
+            description: Order to sort records
+            enum:
+              - 'date'
+              - 'categoryId'
+              - 'cost'
+            default: 'date'
+      responses:
+        '200':
+          description: list of records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Record'
+        '400':
+          description: 'Invalid status value'
+  /api/record:
+    post:
+      tags:
+        - 'Record'
+      summary: Add new record to the data base
+      operationId: recordAdd
+      responses:
+        '200':
+          description: record added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Record'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Record'
+        description: Record object that needs to be added to the db
+  /api/record/{id}:
+    delete:
+      tags:
+        - 'Record'
+      summary: Remove record by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+            required: ['id']
+            description: ID of the record to get
+      responses:
+        '200':
+          description: record removed
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - email
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        profile:
+          type: object
+    UserLoginInfo:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@test.com
+        password:
+          type: string
+          example: 'password123'
+    UserSignUpRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+        - confirmPassword
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+          example: user@test.com
+        password:
+          type: string
+          example: 'password123'
+        confirmPassword:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+    SignUpResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    ActivationResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        status:
+          type: string
+    Record:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: 'date-time'
+        cost:
+          type: number
+        note:
+          type: string
+        userId:
+          type: integer
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        userId:
+          type: integer

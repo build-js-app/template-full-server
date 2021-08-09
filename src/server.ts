@@ -10,6 +10,11 @@ import routes from './routes/routes';
 import logger from './logger';
 import pathHelper from './helpers/pathHelper';
 
+const OpenApiValidator = require('express-openapi-validator');
+const YAML = require('yamljs');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = YAML.load(pathHelper.getDataRelative('apis.yaml'));
+
 const app = express();
 
 export default {
@@ -41,6 +46,14 @@ function initExpress() {
 
   app.use(bodyParser.json()); // get information from html forms
   app.use(bodyParser.urlencoded({extended: true}));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use(
+    OpenApiValidator.middleware({
+      apiSpec: swaggerDocument,
+      validateRequests: true,
+      validateResponses: false
+    })
+  );
 
   app.use('/', express.static(pathHelper.getClientRelative('/')));
 
