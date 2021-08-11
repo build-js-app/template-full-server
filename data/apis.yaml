@@ -19,6 +19,8 @@ tags:
       url: 'http://swagger.io'
   - name: 'Record'
     description: 'Everything about Records'
+security:
+  - ApiKeyAuth: []
 paths:
   /api/current-user:
     get:
@@ -40,20 +42,17 @@ paths:
       operationId: userLogin
       description: |
         Login user by email/password
+      security: []
       responses:
         '201':
-          description: successfull login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LoginResponse'
+          $ref: '#/components/responses/LoginResponse'
         '400':
           description: 'object invalid'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserLoginInfo'
+              $ref: '#/components/schemas/UserLoginRequest'
         description: User login info
   /api/sign-up:
     post:
@@ -63,13 +62,14 @@ paths:
       operationId: userSignUp
       description: |
         Create new user with provided email/password
+      security: []
       responses:
         '201':
           description: successfull sign up
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignUpResponse'
+                $ref: '#/components/schemas/AuthResponse'
         '409':
           description: 'server error'
         '400':
@@ -93,6 +93,7 @@ paths:
             type: string
             required: ['token']
             description: Activation token
+      security: []
       responses:
         '200':
           description: successfully activated
@@ -100,6 +101,75 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ActivationResponse'
+  /api/password-forgot:
+    post:
+      tags:
+        - 'User'
+      summary: forget password
+      operationId: forgotPassword
+      description: |
+        Forgot password
+      security: []
+      responses:
+        '201':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: 'object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordForgotRequest'
+        description: User email
+  /api/password-reset/{token}:
+    get:
+      tags:
+        - 'User'
+      summary: reset password getter
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+            required: ['token']
+            description: Reset password token
+      security: []
+      responses:
+        '200':
+          description: user found by reset token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetResponse'
+  /api/password-reset:
+    post:
+      tags:
+        - 'User'
+      summary: reset password
+      operationId: resetPassword
+      description: |
+        Create new password for user
+      security: []
+      responses:
+        '201':
+          description: successfull reset
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: 'object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+        description: Reset password request
   /api/categories:
     get:
       tags:
@@ -216,6 +286,11 @@ paths:
         '200':
           description: record removed
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: 'apiKey'
+      in: 'header'
+      name: 'Authorization'
   schemas:
     User:
       type: object
@@ -229,7 +304,32 @@ components:
           format: email
         profile:
           type: object
-    UserLoginInfo:
+    Record:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: 'date-time'
+        cost:
+          type: number
+        note:
+          type: string
+        userId:
+          type: integer
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        userId:
+          type: integer
+    UserLoginRequest:
       type: object
       required:
         - email
@@ -264,14 +364,32 @@ components:
           example: 'password123'
         confirmPassword:
           type: string
-    LoginResponse:
+    PasswordForgotRequest:
       type: object
+      required:
+        - email
       properties:
-        user:
-          $ref: '#/components/schemas/User'
+        email:
+          type: string
+          format: email
+    PasswordResetRequest:
+      type: object
+      required:
+        - email
+        - password
+        - confirmPassword
+        - token
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        confirmPassword:
+          type: string
         token:
           type: string
-    SignUpResponse:
+    AuthResponse:
       type: object
       properties:
         message:
@@ -283,28 +401,26 @@ components:
           type: string
         status:
           type: string
-    Record:
+    PasswordResetResponse:
       type: object
       properties:
-        id:
-          type: integer
-        date:
+        email:
           type: string
-          format: 'date-time'
-        cost:
-          type: number
-        note:
+          format: email
+        token:
           type: string
-        userId:
-          type: integer
-    Category:
-      type: object
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-        description:
-          type: string
-        userId:
-          type: integer
+  #-------------------------------
+  # Reusable responses
+  #-------------------------------
+  responses:
+    LoginResponse:
+      description: successfull login
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: '#/components/schemas/User'
+              token:
+                type: string
