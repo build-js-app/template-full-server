@@ -1,0 +1,25 @@
+description: Sign up info (email/password)
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+        - confirmPassword
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+          example: user@test.com
+        password:
+          type: string
+          example: 'password123'
+        confirmPassword:
+          type: string

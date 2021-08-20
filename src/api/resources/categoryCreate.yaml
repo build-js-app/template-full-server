@@ -1,0 +1,18 @@
+post:
+  tags:
+    - 'Category'
+  summary: Add new category to the data base
+  operationId: categoryAdd
+  responses:
+    '200':
+      description: category added
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Category.yaml'
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/Category.yaml'
+    description: Category object that needs to be added to the db

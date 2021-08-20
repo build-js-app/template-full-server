@@ -1,0 +1,15 @@
+delete:
+  tags:
+    - 'Record'
+  summary: Remove record by ID
+  parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: number
+        required: ['id']
+        description: ID of the record to get
+  responses:
+    '200':
+      description: record removed

@@ -1,0 +1,15 @@
+post:
+  tags:
+    - 'User'
+  summary: user login
+  operationId: userLogin
+  description: |
+    Login user by email/password
+  security: []
+  responses:
+    '201':
+      $ref: '../responses/LoginResponse.yaml'
+    '400':
+      description: 'object invalid'
+  requestBody:
+    $ref: '../requestBodies/loginRequest.yaml'

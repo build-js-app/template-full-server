@@ -1,0 +1,16 @@
+get:
+  tags:
+    - 'User'
+  summary: reset password getter
+  parameters:
+    - in: path
+      name: token
+      required: true
+      schema:
+        type: string
+        required: ['token']
+        description: Reset password token
+  security: []
+  responses:
+    '200':
+      $ref: '../responses/PasswordResetResponse.yaml'

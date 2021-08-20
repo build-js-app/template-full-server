@@ -1,0 +1,9 @@
+# body
+UserLoginRequest:
+  $ref: './loginRequest.yaml'
+UserSignUpRequest:
+  $ref: './signUpRequest.yaml'
+PasswordForgotRequest:
+  $ref: './passwordForgotRequest.yaml'
+PasswordResetRequest:
+  $ref: './passwordResetRequest.yaml'

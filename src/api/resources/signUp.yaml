@@ -1,0 +1,17 @@
+post:
+  tags:
+    - 'User'
+  summary: user sign up
+  operationId: userSignUp
+  description: |
+    Create new user with provided email/password
+  security: []
+  responses:
+    '201':
+      $ref: '../responses/AuthResponse.yaml'
+    '409':
+      description: 'server error'
+    '400':
+      description: 'object invalid'
+  requestBody:
+    $ref: '../requestBodies/signUpRequest.yaml'

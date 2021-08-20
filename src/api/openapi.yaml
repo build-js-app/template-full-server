@@ -1,0 +1,64 @@
+openapi: 3.0.0
+servers:
+  - description: Local
+    url: http://localhost:5000/
+info:
+  description: Server template for build-app. Project "full".
+  version: '1.0.0'
+  title: Full Template
+tags:
+  - name: 'User'
+    description: 'Operations about user'
+    externalDocs:
+      description: 'Find out more about our store'
+      url: 'http://swagger.io'
+  - name: 'Category'
+    description: 'Everything about your Categories'
+    externalDocs:
+      description: 'Find out more'
+      url: 'http://swagger.io'
+  - name: 'Record'
+    description: 'Everything about Records'
+security:
+  - ApiKeyAuth: []
+paths:
+  /api/current-user:
+    $ref: './resources/user.yaml'
+  /api/login:
+    $ref: './resources/login.yaml'
+  /api/sign-up:
+    $ref: './resources/signUp.yaml'
+  /api/activate/{token}:
+    $ref: './resources/activate.yaml'
+  /api/password-forgot:
+    $ref: './resources/passwordForgot.yaml'
+  /api/password-reset/{token}:
+    $ref: './resources/resetToken.yaml'
+  /api/password-reset:
+    $ref: './resources/passwordReset.yaml'
+  /api/categories:
+    $ref: './resources/categories.yaml'
+  /api/category:
+    $ref: './resources/categoryCreate.yaml'
+  /api/category/{id}:
+    $ref: './resources/categoryRemove.yaml'
+  /api/records:
+    $ref: './resources/records.yaml'
+  /api/record:
+    $ref: './resources/recordCreate.yaml'
+  /api/record/{id}:
+    $ref: './resources/recordRemove.yaml'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: 'apiKey'
+      in: 'header'
+      name: 'Authorization'
+  parameters:
+    $ref: './parameters/_index.yaml'
+  requestBodies:
+    $ref: './requestBodies/_index.yaml'
+  schemas:
+    $ref: './schemas/_index.yaml'
+  responses:
+    $ref: './responses/_index.yaml'

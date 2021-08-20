@@ -1,0 +1,8 @@
+AuthResponse:
+  $ref: './AuthResponse.yaml'
+ActivationResponse:
+  $ref: './ActivationResponse.yaml'
+PasswordResetResponse:
+  $ref: './PasswordResetResponse.yaml'
+LoginResponse:
+  $ref: './LoginResponse.yaml'

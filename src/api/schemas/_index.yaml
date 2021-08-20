@@ -1,0 +1,6 @@
+User:
+  $ref: './User.yaml'
+Record:
+  $ref: './Record.yaml'
+Category:
+  $ref: './Category.yaml'

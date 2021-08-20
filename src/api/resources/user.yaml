@@ -1,0 +1,11 @@
+get:
+  tags:
+    - 'User'
+  summary: Get current user
+  responses:
+    '200':
+      description: user found
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/User.yaml'

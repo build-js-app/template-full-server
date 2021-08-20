@@ -1,0 +1,18 @@
+post:
+  tags:
+    - 'Record'
+  summary: Add new record to the data base
+  operationId: recordAdd
+  responses:
+    '200':
+      description: record added
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/Record.yaml'
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/Record.yaml'
+    description: Record object that needs to be added to the db

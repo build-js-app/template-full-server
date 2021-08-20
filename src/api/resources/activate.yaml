@@ -1,0 +1,16 @@
+get:
+  tags:
+    - 'User'
+  summary: user activation
+  parameters:
+    - in: path
+      name: token
+      required: true
+      schema:
+        type: string
+        required: ['token']
+        description: Activation token
+  security: []
+  responses:
+    '200':
+      $ref: '../responses/ActivationResponse.yaml'

@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "start": "npm run serve",
-    "serve": "nodemon --exec ts-node -- ./src/index.ts"
+    "serve": "nodemon --exec ts-node -- ./src/index.ts",
+    "build-swagger": "swagger-cli bundle src/api/openapi.yaml --outfile data/apis.yaml --type yaml"
   },
   "author": "Erik Sytnyk",
   "license": "ISC",
@@ -39,6 +40,7 @@
     "sequelize": "6.6.2",
     "sqlite3": "5.0.2",
     "strip-json-comments": "3.1.1",
+    "swagger-cli": "4.0.4",
     "swagger-ui-express": "4.1.6",
     "winston": "3.3.3",
     "yamljs": "0.3.0"

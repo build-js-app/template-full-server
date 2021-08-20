@@ -1,0 +1,10 @@
+description: successfull login
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        user:
+          $ref: '../schemas/User.yaml'
+        token:
+          type: string

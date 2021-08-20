@@ -1,0 +1,16 @@
+description: User login info
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@test.com
+        password:
+          type: string
+          example: 'password123'

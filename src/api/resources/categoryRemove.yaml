@@ -1,0 +1,15 @@
+delete:
+  tags:
+    - 'Category'
+  summary: Remove category by ID
+  parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        required: ['id']
+        description: ID of the category to get
+  responses:
+    '200':
+      description: category removed

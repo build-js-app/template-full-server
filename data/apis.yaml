@@ -1,31 +1,31 @@
 openapi: 3.0.0
 servers:
   - description: Local
-    url: http://localhost:5000/
+    url: 'http://localhost:5000/'
 info:
   description: Server template for build-app. Project "full".
-  version: '1.0.0'
+  version: 1.0.0
   title: Full Template
 tags:
-  - name: 'User'
-    description: 'Operations about user'
+  - name: User
+    description: Operations about user333
     externalDocs:
-      description: 'Find out more about our store'
+      description: Find out more about our store
       url: 'http://swagger.io'
-  - name: 'Category'
-    description: 'Everything about your Categories'
+  - name: Category
+    description: Everything about your Categories
     externalDocs:
-      description: 'Find out more'
+      description: Find out more
       url: 'http://swagger.io'
-  - name: 'Record'
-    description: 'Everything about Records'
+  - name: Record
+    description: Everything about Records
 security:
   - ApiKeyAuth: []
 paths:
   /api/current-user:
     get:
       tags:
-        - 'User'
+        - User
       summary: Get current user
       responses:
         '200':
@@ -37,7 +37,7 @@ paths:
   /api/login:
     post:
       tags:
-        - 'User'
+        - User
       summary: user login
       operationId: userLogin
       description: |
@@ -47,17 +47,13 @@ paths:
         '201':
           $ref: '#/components/responses/LoginResponse'
         '400':
-          description: 'object invalid'
+          description: object invalid
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserLoginRequest'
-        description: User login info
+        $ref: '#/components/requestBodies/UserLoginRequest'
   /api/sign-up:
     post:
       tags:
-        - 'User'
+        - User
       summary: user sign up
       operationId: userSignUp
       description: |
@@ -65,25 +61,17 @@ paths:
       security: []
       responses:
         '201':
-          description: successfull sign up
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthResponse'
-        '409':
-          description: 'server error'
+          $ref: '#/components/responses/AuthResponse'
         '400':
-          description: 'object invalid'
+          description: object invalid
+        '409':
+          description: server error
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserSignUpRequest'
-        description: Sign up info (email/password)
-  /api/activate/{token}:
+        $ref: '#/components/requestBodies/UserSignUpRequest'
+  '/api/activate/{token}':
     get:
       tags:
-        - 'User'
+        - User
       summary: user activation
       parameters:
         - in: path
@@ -91,20 +79,17 @@ paths:
           required: true
           schema:
             type: string
-            required: ['token']
+            required:
+              - token
             description: Activation token
       security: []
       responses:
         '200':
-          description: successfully activated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActivationResponse'
+          $ref: '#/components/responses/ActivationResponse'
   /api/password-forgot:
     post:
       tags:
-        - 'User'
+        - User
       summary: forget password
       operationId: forgotPassword
       description: |
@@ -112,23 +97,15 @@ paths:
       security: []
       responses:
         '201':
-          description: successfull operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthResponse'
+          $ref: '#/components/responses/AuthResponse'
         '400':
-          description: 'object invalid'
+          description: object invalid
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PasswordForgotRequest'
-        description: User email
-  /api/password-reset/{token}:
+        $ref: '#/components/requestBodies/PasswordForgotRequest'
+  '/api/password-reset/{token}':
     get:
       tags:
-        - 'User'
+        - User
       summary: reset password getter
       parameters:
         - in: path
@@ -136,20 +113,17 @@ paths:
           required: true
           schema:
             type: string
-            required: ['token']
+            required:
+              - token
             description: Reset password token
       security: []
       responses:
         '200':
-          description: user found by reset token
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PasswordResetResponse'
+          $ref: '#/components/responses/PasswordResetResponse'
   /api/password-reset:
     post:
       tags:
-        - 'User'
+        - User
       summary: reset password
       operationId: resetPassword
       description: |
@@ -157,23 +131,15 @@ paths:
       security: []
       responses:
         '201':
-          description: successfull reset
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthResponse'
+          $ref: '#/components/responses/AuthResponse'
         '400':
-          description: 'object invalid'
+          description: object invalid
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PasswordResetRequest'
-        description: Reset password request
+        $ref: '#/components/requestBodies/PasswordResetRequest'
   /api/categories:
     get:
       tags:
-        - 'Category'
+        - Category
       summary: Get all categories
       responses:
         '200':
@@ -185,11 +151,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/Category'
         '400':
-          description: 'Invalid status value'
+          description: Invalid status value
   /api/category:
     post:
       tags:
-        - 'Category'
+        - Category
       summary: Add new category to the data base
       operationId: categoryAdd
       responses:
@@ -205,10 +171,10 @@ paths:
             schema:
               $ref: '#/components/schemas/Category'
         description: Category object that needs to be added to the db
-  /api/category/{id}:
+  '/api/category/{id}':
     delete:
       tags:
-        - 'Category'
+        - Category
       summary: Remove category by ID
       parameters:
         - in: path
@@ -216,7 +182,8 @@ paths:
           required: true
           schema:
             type: string
-            required: ['id']
+            required:
+              - id
             description: ID of the category to get
       responses:
         '200':
@@ -224,7 +191,7 @@ paths:
   /api/records:
     get:
       tags:
-        - 'Record'
+        - Record
       summary: Get all records
       parameters:
         - in: query
@@ -232,13 +199,14 @@ paths:
           required: true
           schema:
             type: string
-            required: ['sortBy']
+            required:
+              - sortBy
             description: Order to sort records
             enum:
-              - 'date'
-              - 'categoryId'
-              - 'cost'
-            default: 'date'
+              - date
+              - categoryId
+              - cost
+            default: date
       responses:
         '200':
           description: list of records
@@ -249,11 +217,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/Record'
         '400':
-          description: 'Invalid status value'
+          description: Invalid status value
   /api/record:
     post:
       tags:
-        - 'Record'
+        - Record
       summary: Add new record to the data base
       operationId: recordAdd
       responses:
@@ -269,10 +237,10 @@ paths:
             schema:
               $ref: '#/components/schemas/Record'
         description: Record object that needs to be added to the db
-  /api/record/{id}:
+  '/api/record/{id}':
     delete:
       tags:
-        - 'Record'
+        - Record
       summary: Remove record by ID
       parameters:
         - in: path
@@ -280,7 +248,8 @@ paths:
           required: true
           schema:
             type: number
-            required: ['id']
+            required:
+              - id
             description: ID of the record to get
       responses:
         '200':
@@ -288,9 +257,87 @@ paths:
 components:
   securitySchemes:
     ApiKeyAuth:
-      type: 'apiKey'
-      in: 'header'
-      name: 'Authorization'
+      type: apiKey
+      in: header
+      name: Authorization
+  parameters: !<tag:yaml.org,2002:js/undefined> ''
+  requestBodies:
+    UserLoginRequest:
+      description: User login info
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                format: email
+                example: user@test.com
+              password:
+                type: string
+                example: password123
+    UserSignUpRequest:
+      description: Sign up info (email/password)
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - firstName
+              - lastName
+              - email
+              - password
+              - confirmPassword
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              email:
+                type: string
+                format: email
+                example: user@test.com
+              password:
+                type: string
+                example: password123
+              confirmPassword:
+                type: string
+    PasswordForgotRequest:
+      description: User email
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+            properties:
+              email:
+                type: string
+                format: email
+    PasswordResetRequest:
+      description: Reset password request
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+              - confirmPassword
+              - token
+            properties:
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+              confirmPassword:
+                type: string
+              token:
+                type: string
   schemas:
     User:
       type: object
@@ -311,7 +358,7 @@ components:
           type: integer
         date:
           type: string
-          format: 'date-time'
+          format: date-time
         cost:
           type: number
         note:
@@ -329,90 +376,39 @@ components:
           type: string
         userId:
           type: integer
-    UserLoginRequest:
-      type: object
-      required:
-        - email
-        - password
-      properties:
-        email:
-          type: string
-          format: email
-          example: user@test.com
-        password:
-          type: string
-          example: 'password123'
-    UserSignUpRequest:
-      type: object
-      required:
-        - firstName
-        - lastName
-        - email
-        - password
-        - confirmPassword
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-          format: email
-          example: user@test.com
-        password:
-          type: string
-          example: 'password123'
-        confirmPassword:
-          type: string
-    PasswordForgotRequest:
-      type: object
-      required:
-        - email
-      properties:
-        email:
-          type: string
-          format: email
-    PasswordResetRequest:
-      type: object
-      required:
-        - email
-        - password
-        - confirmPassword
-        - token
-      properties:
-        email:
-          type: string
-          format: email
-        password:
-          type: string
-        confirmPassword:
-          type: string
-        token:
-          type: string
-    AuthResponse:
-      type: object
-      properties:
-        message:
-          type: string
-    ActivationResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        status:
-          type: string
-    PasswordResetResponse:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-        token:
-          type: string
-  #-------------------------------
-  # Reusable responses
-  #-------------------------------
   responses:
+    AuthResponse:
+      description: successfull operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    ActivationResponse:
+      description: successfully activated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              status:
+                type: string
+    PasswordResetResponse:
+      description: user found by reset token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              token:
+                type: string
     LoginResponse:
       description: successfull login
       content:

@@ -1,0 +1,28 @@
+get:
+  tags:
+    - 'Record'
+  summary: Get all records
+  parameters:
+    - in: query
+      name: sortBy
+      required: true
+      schema:
+        type: string
+        required: ['sortBy']
+        description: Order to sort records
+        enum:
+          - 'date'
+          - 'categoryId'
+          - 'cost'
+        default: 'date'
+  responses:
+    '200':
+      description: list of records
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../schemas/Record.yaml'
+    '400':
+      description: 'Invalid status value'

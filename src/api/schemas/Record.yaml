@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: integer
+  date:
+    type: string
+    format: 'date-time'
+  cost:
+    type: number
+  note:
+    type: string
+  userId:
+    type: integer
