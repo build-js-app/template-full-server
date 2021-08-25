@@ -5,3 +5,4 @@ shrinkwrap.yaml
 src/test.ts
 package-lock.json
 tsconfig.json
+data/apis.yaml

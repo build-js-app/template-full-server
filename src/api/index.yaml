@@ -23,42 +23,40 @@ security:
   - ApiKeyAuth: []
 paths:
   /api/current-user:
-    $ref: './resources/user.yaml'
+    $ref: './user/resources/user.yaml'
   /api/login:
-    $ref: './resources/login.yaml'
+    $ref: './user/resources/login.yaml'
   /api/sign-up:
-    $ref: './resources/signUp.yaml'
+    $ref: './user/resources/signUp.yaml'
   /api/activate/{token}:
-    $ref: './resources/activate.yaml'
+    $ref: './user/resources/activate.yaml'
   /api/password-forgot:
-    $ref: './resources/passwordForgot.yaml'
+    $ref: './user/resources/passwordForgot.yaml'
   /api/password-reset/{token}:
-    $ref: './resources/resetToken.yaml'
+    $ref: './user/resources/resetToken.yaml'
   /api/password-reset:
-    $ref: './resources/passwordReset.yaml'
+    $ref: './user/resources/passwordReset.yaml'
   /api/categories:
-    $ref: './resources/categories.yaml'
+    $ref: './category/resources/list.yaml'
   /api/category:
-    $ref: './resources/categoryCreate.yaml'
+    $ref: './category/resources/create.yaml'
   /api/category/{id}:
-    $ref: './resources/categoryRemove.yaml'
+    $ref: './category/resources/remove.yaml'
   /api/records:
-    $ref: './resources/records.yaml'
+    $ref: './record/resources/list.yaml'
   /api/record:
-    $ref: './resources/recordCreate.yaml'
+    $ref: './record/resources/create.yaml'
   /api/record/{id}:
-    $ref: './resources/recordRemove.yaml'
+    $ref: './record/resources/remove.yaml'
 components:
   securitySchemes:
     ApiKeyAuth:
       type: 'apiKey'
       in: 'header'
       name: 'Authorization'
-  parameters:
-    $ref: './parameters/_index.yaml'
   requestBodies:
-    $ref: './requestBodies/_index.yaml'
+    $ref: './requests.yaml'
   schemas:
-    $ref: './schemas/_index.yaml'
+    $ref: './schemas.yaml'
   responses:
-    $ref: './responses/_index.yaml'
+    $ref: './responses.yaml'

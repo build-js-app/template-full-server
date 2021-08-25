@@ -12,4 +12,4 @@ post:
     '400':
       description: 'object invalid'
   requestBody:
-    $ref: '../requestBodies/loginRequest.yaml'
+    $ref: '../requests/loginRequest.yaml'

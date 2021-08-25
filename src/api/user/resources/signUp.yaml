@@ -1,15 +1,17 @@
 post:
   tags:
     - 'User'
-  summary: reset password
-  operationId: resetPassword
+  summary: user sign up
+  operationId: userSignUp
   description: |
-    Create new password for user
+    Create new user with provided email/password
   security: []
   responses:
     '201':
       $ref: '../responses/AuthResponse.yaml'
+    '409':
+      description: 'server error'
     '400':
       description: 'object invalid'
   requestBody:
-    $ref: '../requestBodies/passwordResetRequest.yaml'
+    $ref: '../requests/signUpRequest.yaml'

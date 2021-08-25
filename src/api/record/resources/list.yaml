@@ -23,6 +23,6 @@ get:
           schema:
             type: array
             items:
-              $ref: '../schemas/Record.yaml'
+              $ref: '../Record.yaml'
     '400':
       description: 'Invalid status value'

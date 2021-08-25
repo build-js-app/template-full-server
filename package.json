@@ -3,8 +3,7 @@
   "private": true,
   "scripts": {
     "start": "npm run serve",
-    "serve": "nodemon --exec ts-node -- ./src/index.ts",
-    "build-swagger": "swagger-cli bundle src/api/openapi.yaml --outfile data/apis.yaml --type yaml"
+    "serve": "nodemon --exec ts-node -- ./src/index.ts"
   },
   "author": "Erik Sytnyk",
   "license": "ISC",

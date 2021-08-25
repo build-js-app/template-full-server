@@ -10,6 +10,6 @@ get:
           schema:
             type: array
             items:
-              $ref: '../schemas/Category.yaml'
+              $ref: '../Category.yaml'
     '400':
       description: 'Invalid status value'

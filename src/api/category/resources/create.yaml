@@ -9,10 +9,10 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../schemas/Category.yaml'
+            $ref: '../Category.yaml'
   requestBody:
     content:
       application/json:
         schema:
-          $ref: '../schemas/Category.yaml'
+          $ref: '../Category.yaml'
     description: Category object that needs to be added to the db

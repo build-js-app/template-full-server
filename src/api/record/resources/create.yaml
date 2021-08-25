@@ -9,10 +9,10 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../schemas/Record.yaml'
+            $ref: '../Record.yaml'
   requestBody:
     content:
       application/json:
         schema:
-          $ref: '../schemas/Record.yaml'
+          $ref: '../Record.yaml'
     description: Record object that needs to be added to the db
