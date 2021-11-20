@@ -3,11 +3,15 @@ import * as _ from 'lodash';
 import config from '../config';
 import logger from '../logger';
 
+import * as UserModel from './models/user';
+import * as CategoryModel from './models/category';
+import * as RecordModel from './models/record';
+
 let db = null;
 let models = {
-  User: null,
-  Record: null,
-  Category: null
+  User: UserModel as any,
+  Record: RecordModel as any,
+  Category: CategoryModel as any
 };
 
 export default {
@@ -31,13 +35,6 @@ async function init() {
   } catch (err) {
     console.error('Could not connect to MongoDB!');
     logger.error(err);
-  }
-
-  //init models
-  for (let modelName of Object.keys(models)) {
-    let model = require(`./models/${_.lowerCase(modelName)}`);
-
-    models[modelName] = model;
   }
 }
 
