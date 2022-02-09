@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt-nodejs';
 import * as Joi from 'joi';
 import * as dateFns from 'date-fns';
 import * as jwt from 'jsonwebtoken';
+import * as Parse from 'parse/node';
 
 import helper from './_controllerHelper';
 import userRepository from '../repositories/userRepository';
@@ -19,7 +20,7 @@ export default {
 
 async function signUpPost(req, res) {
   try {
-    let userData = await helper.loadSchema(req.body, {
+    /* let userData = await helper.loadSchema(req.body, {
       firstName: Joi.string().required(),
       lastName: Joi.string().required(),
       email: Joi.string()
@@ -49,7 +50,7 @@ async function signUpPost(req, res) {
 
     let message = 'Activation email was send. Please, check you inbox.';
 
-    return helper.sendData({message}, res);
+    return helper.sendData({message}, res);*/
   } catch (err) {
     helper.sendFailureMessage(err, res);
   }
@@ -57,16 +58,39 @@ async function signUpPost(req, res) {
 
 async function loginPost(req, res) {
   try {
-    let loginSuccess = true;
+    //let loginSuccess = true;
 
-    let userData = await helper.loadSchema(req.body, {
-      email: Joi.string()
-        .email()
-        .required(),
+    const userData = await helper.loadSchema(req.body, {
+      email: Joi.string().email().required(),
       password: Joi.string().required()
     });
 
-    let user = await userRepository.getLocalUserByEmail(userData.email.toLowerCase());
+    const loggedInUser: Parse.User = await Parse.User.logIn(userData.email, userData.password);
+
+    const user = {
+      id: loggedInUser.id,
+      email: loggedInUser.get('email'),
+      profile: {
+        local: {
+          firstName: loggedInUser.get('firstName'),
+          lastName: loggedInUser.get('lastName'),
+          isActivated: true
+        }
+      }
+    };
+
+    let token = jwt.sign(user, config.auth.jwtKey, {
+      expiresIn: config.auth.expiry
+    });
+
+    let result = {
+      token,
+      user
+    };
+
+    return helper.sendData(result, res);
+
+    /* let user = await userRepository.getLocalUserByEmail(userData.email.toLowerCase());
 
     if (!user.profile.local.isActivated)
       throw new AppError(
@@ -96,7 +120,7 @@ async function loginPost(req, res) {
       user
     };
 
-    return helper.sendData(result, res);
+    return helper.sendData(result, res);*/
   } catch (err) {
     helper.sendFailureMessage(err, res);
   }
@@ -108,7 +132,7 @@ async function activate(req, res) {
 
     let token = req.params.token;
 
-    let localUser = await userRepository.getUserByActivationToken(token);
+    /*let localUser = await userRepository.getUserByActivationToken(token);
 
     if (!localUser) {
       data = {
@@ -142,7 +166,7 @@ async function activate(req, res) {
       };
 
       return helper.sendData(data, res);
-    }
+    }*/
   } catch (err) {
     return helper.sendFailureMessage(err, res);
   }
@@ -151,11 +175,9 @@ async function activate(req, res) {
 async function forgotPassword(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      email: Joi.string()
-        .email()
-        .required()
+      email: Joi.string().email().required()
     });
-
+    /*
     let email = data.email.toLowerCase();
 
     let localUser = await userRepository.getLocalUserByEmail(email);
@@ -168,7 +190,7 @@ async function forgotPassword(req, res) {
 
     let message = `We've just dropped you an email. Please check your mail to reset your password. Thanks!`;
 
-    return helper.sendData({message}, res);
+    return helper.sendData({message}, res);*/
   } catch (err) {
     helper.sendFailureMessage(err, res);
   }
@@ -177,7 +199,7 @@ async function forgotPassword(req, res) {
 async function resetPassword(req, res) {
   try {
     let token = req.params.token;
-
+    /*
     let localUser = await getUserByResetToken(token);
 
     let data = {
@@ -185,7 +207,7 @@ async function resetPassword(req, res) {
       token
     };
 
-    return helper.sendData(data, res);
+    return helper.sendData(data, res);*/
   } catch (err) {
     helper.sendFailureMessage(err, res);
   }
@@ -194,15 +216,13 @@ async function resetPassword(req, res) {
 async function resetPasswordPost(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      email: Joi.string()
-        .email()
-        .required(),
+      email: Joi.string().email().required(),
       password: Joi.string().required(),
       confirmPassword: Joi.string().required(),
       token: Joi.string().required()
     });
 
-    if (data.password !== data.confirmPassword) throw new AppError('Passwords do not match.');
+    /*if (data.password !== data.confirmPassword) throw new AppError('Passwords do not match.');
 
     let localUser = await getUserByResetToken(data.token);
 
@@ -210,14 +230,14 @@ async function resetPasswordPost(req, res) {
 
     let message = 'Your password was reset successfully.';
 
-    helper.sendData({message}, res);
+    helper.sendData({message}, res);*/
   } catch (err) {
     helper.sendFailureMessage(err, res);
   }
 }
 
 async function getUserByResetToken(token) {
-  if (!token) throw new AppError('No reset token provided.');
+  /* if (!token) throw new AppError('No reset token provided.');
 
   let localUser = await userRepository.getUserByResetToken(token);
 
@@ -235,5 +255,5 @@ async function getUserByResetToken(token) {
     throw new AppError('Reset password token has expired. New activation email was send.');
   }
 
-  return localUser;
+  return localUser;*/
 }

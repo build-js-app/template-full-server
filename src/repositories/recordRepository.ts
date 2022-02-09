@@ -1,4 +1,4 @@
-import db from '../database/database';
+import * as Parse from 'parse/node';
 
 export default {
   getRecords,
@@ -9,73 +9,68 @@ export default {
   getRecordsByCategoryId
 };
 
-async function getRecords(userId, searchQuery) {
-  let Record = db.models.Record;
+async function getRecords(currentUser, searchQuery) {
+  const query = new Parse.Query('Record');
 
-  let query: any = {
-    userId
-  };
+  query.equalTo('userId', currentUser);
+  query.ascending(searchQuery.sortBy);
 
-  let sort = {};
-
-  sort[searchQuery.sortBy] = 1;
-
-  let records = await Record.find(query).sort(sort);
+  const records: Parse.Record[] = await query.find();
 
   return records.map(record => {
-    return mapRecord(record);
+    return {
+      id: record.id,
+      date: record.get('date'),
+      cost: record.get('cost'),
+      note: record.get('note'),
+      categoryId: record.get('categoryId')?.id,
+      userId: currentUser.id
+    };
   });
 }
 
 async function getRecordById(id) {
-  let Record = db.models.Record;
-
-  let record = await Record.findById(id);
-
-  return mapRecord(record);
+  const queryRecord = new Parse.Query('Record');
+  return await queryRecord.get(id);
 }
 
-async function addRecord(userId, recordData) {
-  let Record = db.models.Record;
+async function addRecord(recordData, category, currentUser) {
+  const Record: Parse.Object = new Parse.Object('Record');
+  Record.set('date', recordData.date);
+  Record.set('cost', recordData.cost);
+  Record.set('note', recordData.note);
+  Record.set('categoryId', category);
+  Record.set('userId', currentUser);
 
-  recordData.userId = userId;
-
-  let record = await Record.create(recordData);
-
-  return mapRecord(record);
+  return await Record.save();
 }
 
-async function updateRecord(recordData) {
-  let Record = db.models.Record;
+async function updateRecord(recordData, category) {
+  const Record: Parse.Object = new Parse.Object('Record');
+  Record.set('objectId', recordData.id);
+  Record.set('date', recordData.date);
+  Record.set('cost', recordData.cost);
+  Record.set('note', recordData.note);
+  Record.set('categoryId', category);
 
-  let record = await Record.findOne({_id: recordData.id});
-
-  if (!record) return;
-
-  record.date = recordData.date;
-  record.cost = recordData.cost;
-  record.categoryId = recordData.categoryId;
-  record.note = recordData.note;
-
-  let result = await record.save();
-
-  return mapRecord(result);
+  return await Record.save();
 }
 
 async function removeRecord(id) {
-  let Record = db.models.Record;
+  const Record: Parse.Object = new Parse.Object('Record');
+  Record.set('objectId', id);
 
-  return await Record.deleteOne({_id: id});
+  await Record.destroy();
 }
 
 async function getRecordsByCategoryId(categoryId) {
-  let Record = db.models.Record;
+  /*let Record = db.models.Record;
 
   let records = await Record.find({categoryId});
 
   return records.map(record => {
     return mapRecord(record);
-  });
+  });*/
 }
 
 //helper methods

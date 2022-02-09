@@ -4,10 +4,10 @@
   "auth": {
     "jwtKey": "override_in_local_config_!!!"
   },
-  "db": {
-    "name": "expense_manager",
-    "username": "",
-    "password": ""
+  "parse": {
+    "applicationId": "WBp1h7476ELu1lWWbeDUeHpxrYMd5jL5JigrwYPA",
+    "hostUrl": "https://parseapi.back4app.com/",
+    "javascriptKey": "a5JvA3sHObQuNXyQseYvsfliKFze8dUsj7OcTGTy"
   },
   "email": {
     "useStubs": true,

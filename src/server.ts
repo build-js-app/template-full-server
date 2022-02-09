@@ -3,7 +3,7 @@ import * as morgan from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as _ from 'lodash';
-import db from './database/database';
+import * as Parse from 'parse/node';
 
 import config from './config';
 import routes from './routes/routes';
@@ -23,7 +23,8 @@ function start(port) {
 
   initErrorHandling();
 
-  db.init();
+  Parse.initialize(config.parse.applicationId, config.parse.javascriptKey);
+  Parse.serverURL = config.parse.hostUrl;
 
   if (config.isDevLocal) {
     app.use(morgan('dev'));

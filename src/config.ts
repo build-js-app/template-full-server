@@ -10,14 +10,10 @@ let config = {
     jwtKey: '',
     expiry: 60 * 60 * 2
   },
-  db: {
-    host: 'localhost',
-    port: 27017,
-    name: 'expense-manager',
-    username: '',
-    password: '',
-    timeout: 5000,
-    seedOnStart: false
+  parse: {
+    applicationId: '',
+    hostUrl: '',
+    javascriptKey: ''
   },
   email: {
     useStubs: false,
@@ -35,14 +31,6 @@ let envVars = {
   rootUrl: 'ROOT_URL',
   auth: {
     jwtKey: 'JWT_KEY'
-  },
-  db: {
-    host: 'DB_HOST',
-    port: 'DB_PORT',
-    name: 'DB_NAME',
-    username: 'DB_USER',
-    password: 'DB_PASSWORD',
-    seedOnStart: 'DB_SEED_ON_START'
   },
   email: {
     sendGridKey: 'SENDGRID_KEY'

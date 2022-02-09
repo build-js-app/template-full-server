@@ -1,8 +1,5 @@
-import dbCreator from './database/dbCreator';
-
 export default {
-  run,
-  seed
+  run
 };
 
 const tasks = [{name: 'seed', description: 'Seeds DB with initial data.'}];
@@ -16,14 +13,7 @@ async function run(task) {
     case 'list':
       console.log(tasks);
       break;
-    case 'seed':
-      await seed();
-      break;
     default:
       console.log(`Unknown task "${task}".`);
   }
-}
-
-async function seed() {
-  await dbCreator.createDb();
 }

@@ -1,4 +1,4 @@
-import db from '../database/database';
+import * as Parse from 'parse/node';
 
 export default {
   getCategoryById,
@@ -9,62 +9,48 @@ export default {
 };
 
 async function getCategoryById(id) {
-  let Category = db.models.Category;
-
-  let category = await Category.findById(id);
-
-  return mapCategory(category);
+  const queryCategory = new Parse.Query('Category');
+  return await queryCategory.get(id);
 }
 
-async function getCategories(userId) {
-  let Category = db.models.Category;
+async function getCategories(currentUser) {
+  const query = new Parse.Query('Category');
 
-  let query = {
-    userId
-  };
+  query.equalTo('userId', currentUser);
 
-  let categories = await Category.find(query).sort({title: 1});
+  const categories: Parse.Category[] = await query.find();
 
   return categories.map(category => {
-    return mapCategory(category);
+    return {
+      id: category.id,
+      title: category.get('title'),
+      description: category.get('description'),
+      userId: currentUser.id
+    };
   });
 }
 
-async function addCategory(userId, categoryData) {
-  let Category = db.models.Category;
+async function addCategory(categoryData, currentUser) {
+  const Category: Parse.Object = new Parse.Object('Category');
+  Category.set('title', categoryData.title);
+  Category.set('description', categoryData.description);
+  Category.set('userId', currentUser);
 
-  categoryData.userId = userId;
-
-  let category = await Category.create(categoryData);
-
-  return mapCategory(category);
+  return await Category.save();
 }
 
 async function updateCategory(categoryData) {
-  let Category = db.models.Category;
+  const Category: Parse.Object = new Parse.Object('Category');
+  Category.set('objectId', categoryData.id);
+  Category.set('title', categoryData.title);
+  Category.set('description', categoryData.description);
 
-  let category = await Category.findOne({_id: categoryData.id});
-
-  if (!category) return;
-
-  category.title = categoryData.title;
-  category.description = categoryData.description;
-
-  let result = await category.save();
-
-  return mapCategory(result);
+  return await Category.save();
 }
 
 async function removeCategory(id) {
-  let Category = db.models.Category;
+  const Category: Parse.Object = new Parse.Object('Category');
+  Category.set('objectId', id);
 
-  return await Category.deleteOne({_id: id});
-}
-
-//helper methods
-
-function mapCategory(category) {
-  category._doc.id = category._id;
-
-  return category;
+  await Category.destroy();
 }
