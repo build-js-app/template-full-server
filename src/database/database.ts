@@ -30,8 +30,6 @@ async function init() {
     };
 
     await mongoose.connect(connectionStr, options);
-
-    mongoose.set('useCreateIndex', true);
   } catch (err) {
     console.error('Could not connect to MongoDB!');
     logger.error(err);
