@@ -3,15 +3,14 @@ import * as _ from 'lodash';
 import config from '../config';
 import logger from '../logger';
 
-import * as UserModel from './models/user';
-import * as CategoryModel from './models/category';
-import * as RecordModel from './models/record';
+import {UserModel} from './models/user';
+import {CategoryModel} from './models/category';
+import {RecordModel} from './models/record';
 
-let db = null;
-let models = {
-  User: UserModel as any,
-  Record: RecordModel as any,
-  Category: CategoryModel as any
+const models = {
+  User: UserModel,
+  Record: RecordModel,
+  Category: CategoryModel
 };
 
 export default {

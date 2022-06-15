@@ -1,7 +1,20 @@
-import * as mongoose from 'mongoose';
+import {Model, Schema, model, Document} from 'mongoose';
 import * as bcrypt from 'bcrypt-nodejs';
 
-let schema = new mongoose.Schema({
+interface IUser extends Document {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  dataValues: any;
+  profile: any;
+}
+
+interface UserModelType extends Model<IUser> {
+  generateHash(password: string): string;
+}
+
+const userSchema = new Schema<IUser, UserModelType>({
   email: {
     type: String,
     required: true,
@@ -49,8 +62,8 @@ let schema = new mongoose.Schema({
 });
 
 // generating a hash
-schema.methods.generateHash = password => {
+userSchema.static('generateHash', function (password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
+});
 
-module.exports = mongoose.model('User', schema);
+export const UserModel = model<IUser, UserModelType>('User', userSchema);

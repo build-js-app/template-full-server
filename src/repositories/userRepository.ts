@@ -45,7 +45,7 @@ async function saveLocalAccount(user, userData) {
   localProfile.firstName = userData.firstName;
   localProfile.lastName = userData.lastName;
   localProfile.email = userData.email;
-  localProfile.password = new User().generateHash(userData.password);
+  localProfile.password = User.generateHash(userData.password);
 
   let activationToken = generateActivationToken();
   localProfile.activation = {
@@ -133,7 +133,7 @@ async function removeUser(id) {
   return await User.deleteOne({_id: id});
 }
 
-async function resetPassword(userId: number) {
+async function resetPassword(userId: string) {
   let user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user by Id');
@@ -146,13 +146,15 @@ async function resetPassword(userId: number) {
   return await user.save();
 }
 
-async function updateUserPassword(userId: number, password: string) {
+async function updateUserPassword(userId: string, password: string) {
+  const User = db.models.User;
+
   let user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user');
 
   user.profile.local.reset = undefined;
-  user.profile.local.password = user.generateHash(password);
+  user.profile.local.password = User.generateHash(password);
 
   return await user.save();
 }

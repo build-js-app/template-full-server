@@ -1,8 +1,13 @@
-import * as mongoose from 'mongoose';
+import {Schema, Types, model, Document} from 'mongoose';
 
-let ObjectId = mongoose.Types.ObjectId;
+interface ICategory extends Document {
+  id: string;
+  title: string;
+  description: string;
+  userId: Types.ObjectId;
+}
 
-let schema = new mongoose.Schema({
+const categorySchema: Schema = new Schema<ICategory>({
   title: {
     type: String,
     required: true
@@ -12,9 +17,10 @@ let schema = new mongoose.Schema({
     required: true
   },
   userId: {
-    type: ObjectId,
-    required: true
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   }
 });
 
-module.exports = mongoose.model('Category', schema);
+export const CategoryModel = model<ICategory>('Category', categorySchema);

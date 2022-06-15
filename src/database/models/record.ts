@@ -1,8 +1,15 @@
-import * as mongoose from 'mongoose';
+import {Schema, Types, model, Document} from 'mongoose';
 
-let ObjectId = mongoose.Types.ObjectId;
+interface IRecord extends Document {
+  id: string;
+  date: Date;
+  cost: number;
+  note: string;
+  categoryId: Types.ObjectId;
+  userId: Types.ObjectId;
+}
 
-let schema = new mongoose.Schema({
+const recordSchema = new Schema<IRecord>({
   date: {
     type: Date,
     required: true
@@ -16,13 +23,15 @@ let schema = new mongoose.Schema({
     required: true
   },
   categoryId: {
-    type: ObjectId,
-    required: true
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Category'
   },
   userId: {
-    type: ObjectId,
-    required: true
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   }
 });
 
-module.exports = mongoose.model('Record', schema);
+export const RecordModel = model<IRecord>('Record', recordSchema);
