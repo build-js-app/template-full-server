@@ -12,6 +12,12 @@ const profileData = {
     data: './data',
     local: './local',
     client: '../client/build'
+  },
+  test: {
+    root: '../',
+    data: '../data',
+    local: './local',
+    client: './client'
   }
 };
 

@@ -7,6 +7,20 @@
   },
   "author": "Erik Sytnyk",
   "license": "ISC",
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "transform": {
+      "node_modules/variables/.+\\.(j|t)sx?$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!variables/.*)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/build/"
+    ]
+  },
   "globalDependencies": {
     "nodemon": "1.11.0",
     "ts-node": "3.0.2"
@@ -40,6 +54,8 @@
     "winston": "3.7.2"
   },
   "devDependencies": {
+    "jest": "28.1.1",
+    "ts-jest": "28.0.5",
     "typescript": "4.7.3"
   }
 }
