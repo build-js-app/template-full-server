@@ -4,7 +4,7 @@ import * as dateFns from 'date-fns';
 import * as jwt from 'jsonwebtoken';
 
 import helper from './_controllerHelper';
-import userRepository from '../data_sources/mongo/repositories/userRepository';
+import {userRepository} from '../data_access';
 import AppError from '../appError';
 import config from '../config';
 
