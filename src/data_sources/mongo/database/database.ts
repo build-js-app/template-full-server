@@ -18,12 +18,14 @@ export default {
   models
 };
 
+const dbConfig = config.dataSources.mongo;
+
 async function init() {
   let connectionStr = getConnectionString();
 
   try {
     let options = {
-      connectTimeoutMS: config.db.timeout,
+      connectTimeoutMS: dbConfig.timeout,
       useNewUrlParser: true,
       useUnifiedTopology: true
     };
@@ -38,11 +40,11 @@ async function init() {
 function getConnectionString() {
   let result = 'mongodb://';
 
-  if (config.db.username) {
-    result += config.db.username + ':' + config.db.password + '@';
+  if (dbConfig.username) {
+    result += dbConfig.username + ':' + dbConfig.password + '@';
   }
 
-  result += config.db.host + ':' + config.db.port + '/' + config.db.name;
+  result += dbConfig.host + ':' + dbConfig.port + '/' + dbConfig.name;
 
   return result;
 }

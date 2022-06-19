@@ -17,7 +17,7 @@ import logger from './logger';
 import tasks from './tasks';
 
 async function start() {
-  if (config.db.seedOnStart) {
+  if (config.dataAccess.seedOnStart) {
     await tasks.seed();
   }
 
