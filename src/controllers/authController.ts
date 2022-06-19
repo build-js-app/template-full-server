@@ -4,7 +4,7 @@ import * as dateFns from 'date-fns';
 import * as jwt from 'jsonwebtoken';
 
 import helper from './_controllerHelper';
-import userRepository from '../repositories/userRepository';
+import userRepository from '../data_sources/mongo/repositories/userRepository';
 import AppError from '../appError';
 import config from '../config';
 
@@ -22,9 +22,7 @@ async function signUpPost(req, res) {
     let userData = await helper.loadSchema(req.body, {
       firstName: Joi.string().required(),
       lastName: Joi.string().required(),
-      email: Joi.string()
-        .email()
-        .required(),
+      email: Joi.string().email().required(),
       password: Joi.string().required(),
       confirmPassword: Joi.string().required()
     });
@@ -60,9 +58,7 @@ async function loginPost(req, res) {
     let loginSuccess = true;
 
     let userData = await helper.loadSchema(req.body, {
-      email: Joi.string()
-        .email()
-        .required(),
+      email: Joi.string().email().required(),
       password: Joi.string().required()
     });
 
@@ -151,9 +147,7 @@ async function activate(req, res) {
 async function forgotPassword(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      email: Joi.string()
-        .email()
-        .required()
+      email: Joi.string().email().required()
     });
 
     let email = data.email.toLowerCase();
@@ -194,9 +188,7 @@ async function resetPassword(req, res) {
 async function resetPasswordPost(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      email: Joi.string()
-        .email()
-        .required(),
+      email: Joi.string().email().required(),
       password: Joi.string().required(),
       confirmPassword: Joi.string().required(),
       token: Joi.string().required()

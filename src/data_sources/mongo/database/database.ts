@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import * as _ from 'lodash';
-import config from '../config';
-import logger from '../logger';
+import config from '../../../config';
+import logger from '../../../logger';
 
 import {UserModel} from './models/user';
 import {CategoryModel} from './models/category';

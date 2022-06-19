@@ -3,7 +3,7 @@ import * as morgan from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as _ from 'lodash';
-import db from './database/database';
+import db from './data_sources/mongo/database/database';
 
 import config from './config';
 import routes from './routes/routes';

@@ -2,9 +2,7 @@ import * as Joi from 'joi';
 
 import AppError from '../appError';
 import helper from './_controllerHelper';
-import userRepository from '../repositories/userRepository';
-import categoryRepository from '../repositories/categoryRepository';
-import recordRepository from '../repositories/recordRepository';
+import {userRepository, categoryRepository, recordRepository} from '../data_access';
 
 export default {
   currentUser,
@@ -43,11 +41,13 @@ async function categoryList(req, res) {
 async function saveCategory(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      category: Joi.object().unknown(true).keys({
-        id: Joi.string().allow(null),
-        title: Joi.string().required(),
-        description: Joi.string().required()
-      })
+      category: Joi.object()
+        .unknown(true)
+        .keys({
+          id: Joi.string().allow(null),
+          title: Joi.string().required(),
+          description: Joi.string().required()
+        })
     });
 
     let userId = helper.getCurrentUser(req)._id;
@@ -105,13 +105,15 @@ async function recordList(req, res) {
 async function saveRecord(req, res) {
   try {
     let data = await helper.loadSchema(req.body, {
-      record: Joi.object().unknown(true).keys({
-        id: Joi.string().allow(null),
-        date: Joi.date().required(),
-        categoryId: Joi.string().required(),
-        cost: Joi.number().required(),
-        note: Joi.string().required()
-      })
+      record: Joi.object()
+        .unknown(true)
+        .keys({
+          id: Joi.string().allow(null),
+          date: Joi.date().required(),
+          categoryId: Joi.string().required(),
+          cost: Joi.number().required(),
+          note: Joi.string().required()
+        })
     });
 
     let userId = helper.getCurrentUser(req)._id;

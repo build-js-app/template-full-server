@@ -1,4 +1,4 @@
-import dbCreator from './database/dbCreator';
+import dbCreator from './data_sources/mongo/database/dbCreator';
 
 export default {
   run,
