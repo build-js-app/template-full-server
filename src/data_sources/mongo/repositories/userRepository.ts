@@ -22,9 +22,11 @@ export default {
 };
 
 async function getUserByEmail(email) {
-  let User = db.models.User;
+  const User = db.models.User;
 
-  return await User.findOne({email});
+  const user = await User.findOne({email});
+
+  return mapUser(user);
 }
 
 async function getLocalUserByEmail(email: string) {
@@ -55,25 +57,31 @@ async function saveLocalAccount(user, userData) {
 
   localProfile.isActivated = false;
 
+  let result = null;
+
   if (user) {
     user.email = userData.email;
     user.profile.local = localProfile;
 
-    return await user.save();
+    result = await user.save();
   } else {
-    return await User.create({
+    result = await User.create({
       email: userData.email,
       profile: {
         local: localProfile
       }
     });
   }
+
+  return mapUser(result);
 }
 
 async function getUserById(id) {
-  let User = db.models.User;
+  const User = db.models.User;
 
-  return await User.findById(id);
+  const user = await User.findById(id);
+
+  return mapUser(user);
 }
 
 async function getUsers() {
@@ -83,13 +91,13 @@ async function getUsers() {
 }
 
 async function getUserByActivationToken(token: string) {
-  let users = await getUsers();
+  const users = await getUsers();
 
-  let findUser = _.find(users, (user: any) => {
+  const findUser = _.find(users, (user: any) => {
     return user.profile.local && user.profile.local.activation.token === token;
   });
 
-  return findUser;
+  return mapUser(findUser);
 }
 
 async function refreshActivationToken(userId: number) {
@@ -102,7 +110,9 @@ async function refreshActivationToken(userId: number) {
     created: new Date().toString()
   };
 
-  return await user.save();
+  const result = await user.save();
+
+  return mapUser(result);
 }
 
 async function activateUser(userId: number) {
@@ -113,7 +123,9 @@ async function activateUser(userId: number) {
   user.profile.local.activation = undefined;
   user.profile.local.isActivated = true;
 
-  return await user.save();
+  const result = await user.save();
+
+  return mapUser(result);
 }
 
 async function updateUser(userData) {
@@ -124,7 +136,9 @@ async function updateUser(userData) {
   user.firstName = userData.firstName;
   user.lastName = userData.lastName;
 
-  return await user.save();
+  const result = await user.save();
+
+  return mapUser(result);
 }
 
 async function removeUser(id) {
@@ -133,7 +147,7 @@ async function removeUser(id) {
   return await User.deleteOne({_id: id});
 }
 
-async function resetPassword(userId: string) {
+async function resetPassword(userId) {
   let user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user by Id');
@@ -143,10 +157,12 @@ async function resetPassword(userId: string) {
     created: new Date().toString()
   };
 
-  return await user.save();
+  const result = await user.save();
+
+  return mapUser(result);
 }
 
-async function updateUserPassword(userId: string, password: string) {
+async function updateUserPassword(userId, password: string) {
   const User = db.models.User;
 
   let user = await getUserById(userId);
@@ -156,20 +172,22 @@ async function updateUserPassword(userId: string, password: string) {
   user.profile.local.reset = undefined;
   user.profile.local.password = User.generateHash(password);
 
-  return await user.save();
+  const result = await user.save();
+
+  return mapUser(result);
 }
 
 async function getUserByResetToken(token: string) {
-  let users = await getUsers();
+  const users = await getUsers();
 
-  let findUser = _.find(users, (user: any) => {
+  const findUser = _.find(users, user => {
     return user.profile.local && user.profile.local.reset.token === token;
   });
 
-  return findUser;
+  return mapUser(findUser);
 }
 
-async function refreshResetToken(userId: number) {
+async function refreshResetToken(userId) {
   let user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user');
@@ -179,10 +197,20 @@ async function refreshResetToken(userId: number) {
     created: new Date().toString()
   };
 
-  return await user.save();
+  const result = await user.save();
+
+  return mapUser(result);
 }
 
 function generateActivationToken(): string {
   let token = crypto.randomBytes(32).toString('hex');
   return token;
+}
+
+//helper methods
+
+function mapUser(user) {
+  user._doc.id = user._id;
+
+  return user;
 }

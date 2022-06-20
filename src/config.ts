@@ -18,7 +18,7 @@ let config = {
     mongo: {
       host: 'localhost',
       port: 27017,
-      name: 'expense-manager',
+      name: 'expense_manager',
       username: '',
       password: '',
       timeout: 5000
@@ -26,7 +26,7 @@ let config = {
     sequelize: {
       host: 'localhost',
       port: 0,
-      name: 'expense-manager',
+      name: 'expense_manager',
       dialect: '', // 'mysql'|'sqlite'|'postgres'|'mssql'
       username: '',
       password: '',

@@ -16,7 +16,7 @@ export default {
 
 async function currentUser(req, res) {
   try {
-    let userId = helper.getCurrentUser(req)._id;
+    let userId = helper.getCurrentUser(req).id;
 
     let user = await userRepository.getUserById(userId);
 
@@ -28,7 +28,7 @@ async function currentUser(req, res) {
 
 async function categoryList(req, res) {
   try {
-    let userId = helper.getCurrentUser(req)._id;
+    let userId = helper.getCurrentUser(req).id;
 
     let records = await categoryRepository.getCategories(userId);
 
@@ -44,13 +44,13 @@ async function saveCategory(req, res) {
       category: Joi.object()
         .unknown(true)
         .keys({
-          id: Joi.string().allow(null),
+          id: Joi.alternatives().try(Joi.number(), Joi.string()).allow(null),
           title: Joi.string().required(),
           description: Joi.string().required()
         })
     });
 
-    let userId = helper.getCurrentUser(req)._id;
+    let userId = helper.getCurrentUser(req).id;
 
     let category = null;
 
@@ -71,10 +71,10 @@ async function saveCategory(req, res) {
 async function deleteCategory(req, res) {
   try {
     let data = await helper.loadSchema(req.params, {
-      id: Joi.string().required()
+      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
     });
 
-    await assertUserOwnsCategory(helper.getCurrentUser(req)._id, data.id);
+    await assertUserOwnsCategory(helper.getCurrentUser(req).id, data.id);
 
     await assertCategoryHasNoRecords(data.id);
 
@@ -92,7 +92,7 @@ async function recordList(req, res) {
       sortBy: Joi.string().required()
     });
 
-    let userId = helper.getCurrentUser(req)._id;
+    let userId = helper.getCurrentUser(req).id;
 
     let records = await recordRepository.getRecords(userId, searchQuery);
 
@@ -108,15 +108,15 @@ async function saveRecord(req, res) {
       record: Joi.object()
         .unknown(true)
         .keys({
-          id: Joi.string().allow(null),
+          id: Joi.alternatives().try(Joi.number(), Joi.string()).allow(null),
           date: Joi.date().required(),
-          categoryId: Joi.string().required(),
+          categoryId: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
           cost: Joi.number().required(),
           note: Joi.string().required()
         })
     });
 
-    let userId = helper.getCurrentUser(req)._id;
+    let userId = helper.getCurrentUser(req).id;
 
     let record = null;
 
@@ -137,10 +137,10 @@ async function saveRecord(req, res) {
 async function deleteRecord(req, res) {
   try {
     let data = await helper.loadSchema(req.params, {
-      id: Joi.string().required()
+      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
     });
 
-    await assertUserOwnsRecord(helper.getCurrentUser(req)._id, data.id);
+    await assertUserOwnsRecord(helper.getCurrentUser(req).id, data.id);
 
     await recordRepository.removeRecord(data.id);
 
@@ -153,7 +153,7 @@ async function deleteRecord(req, res) {
 async function assertUserOwnsCategory(userId, categoryId) {
   let category = await categoryRepository.getCategoryById(categoryId);
 
-  let hasRights = category && category.userId.toString() === userId;
+  let hasRights = category && category.userId.toString() === userId.toString();
 
   if (!hasRights) throw new AppError('User does not own category');
 }
@@ -161,7 +161,7 @@ async function assertUserOwnsCategory(userId, categoryId) {
 async function assertUserOwnsRecord(userId, recordId) {
   let record = await recordRepository.getRecordById(recordId);
 
-  let hasRights = record && record.userId.toString() === userId;
+  let hasRights = record && record.userId.toString() === userId.toString();
 
   if (!hasRights) throw new AppError('User does not own record');
 }

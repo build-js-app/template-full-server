@@ -135,7 +135,7 @@ async function removeUser(id) {
   return await user.destroy();
 }
 
-async function resetPassword(userId: number) {
+async function resetPassword(userId) {
   const user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user by Id');
@@ -146,7 +146,7 @@ async function resetPassword(userId: number) {
   return await user.save();
 }
 
-async function updateUserPassword(userId: number, password: string) {
+async function updateUserPassword(userId, password: string) {
   const user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user');
@@ -168,7 +168,7 @@ async function getUserByResetToken(token: string) {
   return findUser;
 }
 
-async function refreshResetToken(userId: number) {
+async function refreshResetToken(userId) {
   const user = await getUserById(userId);
 
   if (!user) throw new AppError('Cannot find user');

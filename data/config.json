@@ -1,13 +1,30 @@
 {
-  "port": 5005,
-  "rootUrl": "http://localhost:5005",
+  "port": 5000,
+  "rootUrl": "http://localhost:5000",
   "auth": {
     "jwtKey": "override_in_local_config_!!!"
   },
-  "db": {
-    "name": "expense_manager",
-    "username": "",
-    "password": ""
+  "dataAccess": {
+    "seedOnStart": false,
+    "dataSource": "mongo"
+  },
+  "dataSources": {
+    "mongo": {
+      "host": "localhost",
+      "port": 27017,
+      "name": "expense_manager",
+      "username": "",
+      "password": "",
+      "timeout": 5000
+    },
+    "sequelize": {
+      "host": "localhost",
+      "port": 0,
+      "name": "expense_manager",
+      "dialect": "postgres",
+      "username": "",
+      "password": ""
+    }
   },
   "email": {
     "useStubs": true,
