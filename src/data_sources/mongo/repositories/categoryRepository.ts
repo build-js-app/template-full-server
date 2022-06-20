@@ -6,9 +6,9 @@ export default {
   addCategory,
   updateCategory,
   removeCategory
-};
+} as CategoryRepository;
 
-async function getCategoryById(id: string): Promise<Category> {
+async function getCategoryById(id: string): Promise<CategoryDto> {
   const CategoryModel = db.models.Category;
 
   const category = await CategoryModel.findById(id);
@@ -16,7 +16,7 @@ async function getCategoryById(id: string): Promise<Category> {
   return mapCategory(category);
 }
 
-async function getCategories(userId: string): Promise<Category[]> {
+async function getCategories(userId: string): Promise<CategoryDto[]> {
   const CategoryModel = db.models.Category;
 
   const query = {
@@ -30,7 +30,7 @@ async function getCategories(userId: string): Promise<Category[]> {
   });
 }
 
-async function addCategory(userId: string, categoryData): Promise<Category> {
+async function addCategory(userId: string, categoryData): Promise<CategoryDto> {
   const CategoryModel = db.models.Category;
 
   categoryData.userId = userId;
@@ -40,7 +40,7 @@ async function addCategory(userId: string, categoryData): Promise<Category> {
   return mapCategory(category);
 }
 
-async function updateCategory(categoryData): Promise<Category> {
+async function updateCategory(categoryData): Promise<CategoryDto> {
   const CategoryModel = db.models.Category;
 
   const category = await CategoryModel.findOne({_id: categoryData.id});
@@ -55,16 +55,16 @@ async function updateCategory(categoryData): Promise<Category> {
   return mapCategory(result);
 }
 
-async function removeCategory(id: string): Promise<any> {
+async function removeCategory(id: string): Promise<void> {
   const CategoryModel = db.models.Category;
 
-  return await CategoryModel.deleteOne({_id: id});
+  await CategoryModel.deleteOne({_id: id});
 }
 
 //helper methods
 
-function mapCategory(categoryModel): Category {
-  const category: Category = {
+function mapCategory(categoryModel): CategoryDto {
+  const category: CategoryDto = {
     id: categoryModel._id.valueOf(),
     title: categoryModel.title,
     description: categoryModel.description,

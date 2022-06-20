@@ -1,6 +1,6 @@
 import {Model, ModelCtor} from 'sequelize';
 
-interface RecordInstane extends Model {
+interface RecordInstance extends Model {
   id: number;
   categoryId: number;
   date: Date;
@@ -9,4 +9,4 @@ interface RecordInstane extends Model {
   userId: number;
 }
 
-export type RecordModel = ModelCtor<RecordInstane>;
+export type RecordModel = ModelCtor<RecordInstance>;

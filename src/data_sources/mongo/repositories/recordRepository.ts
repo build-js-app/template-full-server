@@ -1,3 +1,4 @@
+import {Types} from 'joi';
 import db from '../database/database';
 
 export default {
@@ -7,9 +8,9 @@ export default {
   updateRecord,
   removeRecord,
   getRecordsByCategoryId
-};
+} as RecordRepository;
 
-async function getRecords(userId, searchQuery) {
+async function getRecords(userId: string, searchQuery: any): Promise<RecordDto[]> {
   let Record = db.models.Record;
 
   let query: any = {
@@ -27,7 +28,7 @@ async function getRecords(userId, searchQuery) {
   });
 }
 
-async function getRecordById(id) {
+async function getRecordById(id: string): Promise<RecordDto> {
   let Record = db.models.Record;
 
   let record = await Record.findById(id);
@@ -35,7 +36,7 @@ async function getRecordById(id) {
   return mapRecord(record);
 }
 
-async function addRecord(userId, recordData) {
+async function addRecord(userId: string, recordData: Partial<RecordDto>) {
   let Record = db.models.Record;
 
   recordData.userId = userId;
@@ -45,7 +46,7 @@ async function addRecord(userId, recordData) {
   return mapRecord(record);
 }
 
-async function updateRecord(recordData) {
+async function updateRecord(recordData: RecordDto): Promise<RecordDto> {
   let Record = db.models.Record;
 
   let record = await Record.findOne({_id: recordData.id});
@@ -54,7 +55,7 @@ async function updateRecord(recordData) {
 
   record.date = recordData.date;
   record.cost = recordData.cost;
-  record.categoryId = recordData.categoryId;
+  record.categoryId = recordData.categoryId as any;
   record.note = recordData.note;
 
   let result = await record.save();
@@ -62,13 +63,13 @@ async function updateRecord(recordData) {
   return mapRecord(result);
 }
 
-async function removeRecord(id) {
+async function removeRecord(id: string): Promise<void> {
   let Record = db.models.Record;
 
-  return await Record.deleteOne({_id: id});
+  await Record.deleteOne({_id: id});
 }
 
-async function getRecordsByCategoryId(categoryId) {
+async function getRecordsByCategoryId(categoryId: string): Promise<RecordDto[]> {
   let Record = db.models.Record;
 
   let records = await Record.find({categoryId});
@@ -80,8 +81,8 @@ async function getRecordsByCategoryId(categoryId) {
 
 //helper methods
 
-function mapRecord(record) {
+function mapRecord(record: any): RecordDto {
   record._doc.id = record._id;
 
-  return record;
+  return record as RecordDto;
 }

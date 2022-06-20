@@ -30,7 +30,7 @@ async function categoryList(req, res) {
   try {
     const userId: string = helper.getCurrentUser(req).id;
 
-    const categories: Category[] = await categoryRepository.getCategories(userId);
+    const categories = await categoryRepository.getCategories(userId);
 
     return helper.sendData(categories, res);
   } catch (err) {
@@ -52,7 +52,7 @@ async function saveCategory(req, res) {
 
     const userId: string = helper.getCurrentUser(req).id;
 
-    let category: Category = null;
+    let category = null;
 
     if (data.category.id) {
       await assertUserOwnsCategory(userId, data.category.id);
@@ -151,7 +151,7 @@ async function deleteRecord(req, res) {
 }
 
 async function assertUserOwnsCategory(userId: string, categoryId: string) {
-  const category: Category = await categoryRepository.getCategoryById(categoryId);
+  const category = await categoryRepository.getCategoryById(categoryId);
 
   const hasRights = category && category.userId === userId;
 

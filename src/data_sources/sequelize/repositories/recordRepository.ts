@@ -1,6 +1,9 @@
 import * as _ from 'lodash';
+import {map} from 'lodash';
 
 import dbInit from '../database/database';
+
+import {RecordInstance} from '../typings/models/RecordModel';
 
 export default {
   getRecords,
@@ -9,12 +12,12 @@ export default {
   updateRecord,
   removeRecord,
   getRecordsByCategoryId
-};
+} as RecordRepository;
 
 const db = dbInit.init();
 const recordModel = db.models.Record;
 
-async function getRecords(userId, searchQuery) {
+async function getRecords(userId: string, searchQuery: any): Promise<RecordDto[]> {
   const options = {
     where: {
       userId: userId
@@ -23,33 +26,39 @@ async function getRecords(userId, searchQuery) {
 
   const records = await recordModel.findAll(options);
 
-  return _.sortBy(records, searchQuery.sortBy);
+  return _.sortBy(records, searchQuery.sortBy).map(category => mapRecord(category));
 }
 
-async function getRecordById(id) {
-  return await recordModel.findByPk(id);
+async function getRecordById(id: string): Promise<RecordDto> {
+  const record = await recordModel.findByPk(id);
+
+  return mapRecord(record);
 }
 
-async function addRecord(userId, record) {
-  record.userId = userId;
+async function addRecord(userId: string, recordData: Partial<RecordDto>) {
+  recordData.userId = userId;
 
-  return await recordModel.create(record);
+  const record = await recordModel.create(recordData);
+
+  return mapRecord(record);
 }
 
-async function updateRecord(recordData) {
+async function updateRecord(recordData: RecordDto): Promise<RecordDto> {
   const record = await recordModel.findByPk(recordData.id);
 
   if (!record) return;
 
   record.date = recordData.date;
   record.cost = recordData.cost;
-  record.categoryId = recordData.categoryId;
+  record.categoryId = recordData.categoryId as any;
   record.note = recordData.note;
 
-  return await record.save();
+  const result = await record.save();
+
+  return mapRecord(result);
 }
 
-async function removeRecord(id) {
+async function removeRecord(id: string): Promise<void> {
   const record = await recordModel.findByPk(id);
 
   if (!record) return;
@@ -57,12 +66,31 @@ async function removeRecord(id) {
   return await record.destroy();
 }
 
-async function getRecordsByCategoryId(categoryId) {
+async function getRecordsByCategoryId(categoryId: string): Promise<RecordDto[]> {
   const options = {
     where: {
       categoryId: categoryId
     }
   };
 
-  return await recordModel.findAll(options);
+  const result = await recordModel.findAll(options);
+
+  return result.map(record => mapRecord(record));
+}
+
+//helper methods
+
+function mapRecord(recordModel: RecordInstance): RecordDto {
+  if (!recordModel) return null;
+
+  const record: RecordDto = {
+    id: recordModel.id.toString(),
+    date: recordModel.date,
+    cost: recordModel.cost,
+    note: recordModel.note,
+    categoryId: recordModel.categoryId.toString(),
+    userId: recordModel.userId.toString()
+  };
+
+  return record;
 }
