@@ -8,63 +8,68 @@ export default {
   removeCategory
 };
 
-async function getCategoryById(id) {
-  let Category = db.models.Category;
+async function getCategoryById(id: string): Promise<Category> {
+  const CategoryModel = db.models.Category;
 
-  let category = await Category.findById(id);
+  const category = await CategoryModel.findById(id);
 
   return mapCategory(category);
 }
 
-async function getCategories(userId) {
-  let Category = db.models.Category;
+async function getCategories(userId: string): Promise<Category[]> {
+  const CategoryModel = db.models.Category;
 
-  let query = {
+  const query = {
     userId
   };
 
-  let categories = await Category.find(query).sort({title: 1});
+  const categories = await CategoryModel.find(query).sort({title: 1});
 
   return categories.map(category => {
     return mapCategory(category);
   });
 }
 
-async function addCategory(userId, categoryData) {
-  let Category = db.models.Category;
+async function addCategory(userId: string, categoryData): Promise<Category> {
+  const CategoryModel = db.models.Category;
 
   categoryData.userId = userId;
 
-  let category = await Category.create(categoryData);
+  const category = await CategoryModel.create(categoryData);
 
   return mapCategory(category);
 }
 
-async function updateCategory(categoryData) {
-  let Category = db.models.Category;
+async function updateCategory(categoryData): Promise<Category> {
+  const CategoryModel = db.models.Category;
 
-  let category = await Category.findOne({_id: categoryData.id});
+  const category = await CategoryModel.findOne({_id: categoryData.id});
 
   if (!category) return;
 
   category.title = categoryData.title;
   category.description = categoryData.description;
 
-  let result = await category.save();
+  const result = await category.save();
 
   return mapCategory(result);
 }
 
-async function removeCategory(id) {
-  let Category = db.models.Category;
+async function removeCategory(id: string): Promise<any> {
+  const CategoryModel = db.models.Category;
 
-  return await Category.deleteOne({_id: id});
+  return await CategoryModel.deleteOne({_id: id});
 }
 
 //helper methods
 
-function mapCategory(category) {
-  category._doc.id = category._id;
+function mapCategory(categoryModel): Category {
+  const category: Category = {
+    id: categoryModel._id.valueOf(),
+    title: categoryModel.title,
+    description: categoryModel.description,
+    userId: categoryModel.userId.valueOf()
+  };
 
   return category;
 }

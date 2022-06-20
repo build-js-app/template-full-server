@@ -28,11 +28,11 @@ async function currentUser(req, res) {
 
 async function categoryList(req, res) {
   try {
-    let userId = helper.getCurrentUser(req).id;
+    const userId: string = helper.getCurrentUser(req).id;
 
-    let records = await categoryRepository.getCategories(userId);
+    const categories: Category[] = await categoryRepository.getCategories(userId);
 
-    return helper.sendData(records, res);
+    return helper.sendData(categories, res);
   } catch (err) {
     return helper.sendFailureMessage(err, res);
   }
@@ -40,19 +40,19 @@ async function categoryList(req, res) {
 
 async function saveCategory(req, res) {
   try {
-    let data = await helper.loadSchema(req.body, {
+    const data = await helper.loadSchema(req.body, {
       category: Joi.object()
         .unknown(true)
         .keys({
-          id: Joi.alternatives().try(Joi.number(), Joi.string()).allow(null),
+          id: Joi.string().allow(null),
           title: Joi.string().required(),
           description: Joi.string().required()
         })
     });
 
-    let userId = helper.getCurrentUser(req).id;
+    const userId: string = helper.getCurrentUser(req).id;
 
-    let category = null;
+    let category: Category = null;
 
     if (data.category.id) {
       await assertUserOwnsCategory(userId, data.category.id);
@@ -70,8 +70,8 @@ async function saveCategory(req, res) {
 
 async function deleteCategory(req, res) {
   try {
-    let data = await helper.loadSchema(req.params, {
-      id: Joi.alternatives().try(Joi.number(), Joi.string()).required()
+    const data = await helper.loadSchema(req.params, {
+      id: Joi.string().required()
     });
 
     await assertUserOwnsCategory(helper.getCurrentUser(req).id, data.id);
@@ -150,10 +150,10 @@ async function deleteRecord(req, res) {
   }
 }
 
-async function assertUserOwnsCategory(userId, categoryId) {
-  let category = await categoryRepository.getCategoryById(categoryId);
+async function assertUserOwnsCategory(userId: string, categoryId: string) {
+  const category: Category = await categoryRepository.getCategoryById(categoryId);
 
-  let hasRights = category && category.userId.toString() === userId.toString();
+  const hasRights = category && category.userId === userId;
 
   if (!hasRights) throw new AppError('User does not own category');
 }
