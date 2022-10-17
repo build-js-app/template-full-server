@@ -1,6 +1,6 @@
 {
-  "port": 5000,
-  "rootUrl": "http://localhost:5000",
+  "port": 5010,
+  "rootUrl": "http://localhost:5010",
   "auth": {
     "jwtKey": "override_in_local_config_!!!"
   },
