@@ -1,6 +1,5 @@
 import * as fs from 'fs-extra';
 import * as _ from 'lodash';
-import * as stripJsonComments from 'strip-json-comments';
 
 export default {
   addJsonFile,
@@ -12,7 +11,7 @@ function addJsonFile(config, path, required = false) {
   try {
     let fileVal = fs.readFileSync(path, {encoding: 'utf8'});
 
-    let fileJson = JSON.parse(stripJsonComments(fileVal));
+    let fileJson = JSON.parse(fileVal);
 
     _.merge(config, fileJson);
   } catch (err) {

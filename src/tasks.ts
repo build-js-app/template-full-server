@@ -1,4 +1,4 @@
-import dbCreator from './data_sources/mongo/database/dbCreator';
+import dataAccess from './data_access';
 
 export default {
   run,
@@ -25,5 +25,5 @@ async function run(task) {
 }
 
 async function seed() {
-  await dbCreator.createDb();
+  await dataAccess.dbCreator.createDb();
 }

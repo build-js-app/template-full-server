@@ -13,10 +13,6 @@ const dbConfig = config.dataSources.mongo;
 
 async function createDb() {
   try {
-    if (config.isDevLocal) {
-      await createIfNotExists();
-    }
-
     const db = dbInit.init();
 
     await beforeSeedRoutine(db);
@@ -33,7 +29,7 @@ async function createDb() {
   }
 }
 
-async function createIfNotExists() {
+async function createPostgresDbIfNotExists() {
   const {host, name: dbName, username, password} = dbConfig;
   const connectionString = `postgres://${username}:${password}@${host}/postgres`;
 
@@ -49,6 +45,10 @@ async function createIfNotExists() {
 
 async function beforeSeedRoutine(db) {
   if (db.sequelize.dialect.name === 'postgres') {
+    if (config.isDevLocal) {
+      await createPostgresDbIfNotExists();
+    }
+
     //clear all tables
     await db.sequelize.query('DROP SCHEMA public CASCADE;');
     await db.sequelize.query('CREATE SCHEMA public;');

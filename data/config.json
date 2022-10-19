@@ -6,7 +6,7 @@
   },
   "dataAccess": {
     "seedOnStart": false,
-    "dataSource": "mongo"
+    "dataSource": "sequelize"
   },
   "dataSources": {
     "mongo": {
@@ -21,7 +21,7 @@
       "host": "localhost",
       "port": 0,
       "name": "expense_manager",
-      "dialect": "postgres",
+      "dialect": "sqlite",
       "username": "",
       "password": ""
     }

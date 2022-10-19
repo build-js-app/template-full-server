@@ -22,7 +22,7 @@ async function seedUsers(db, usersData) {
 
   let User = db.models.User;
 
-  await User.remove();
+  await User.deleteMany();
 
   for (let user of usersData) {
     let localProfile = user.profile.local;
@@ -42,7 +42,7 @@ async function seedCategories(db, categoryData, userLookup) {
 
   let Category = db.models.Category;
 
-  await Category.remove();
+  await Category.deleteMany();
 
   for (let category of categoryData) {
     category.userId = userLookup[category.userId];
@@ -58,7 +58,7 @@ async function seedCategories(db, categoryData, userLookup) {
 async function seedRecords(db, recordsData, userLookup, categoryLookup) {
   let Record = db.models.Record;
 
-  await Record.remove();
+  await Record.deleteMany();
 
   for (let record of recordsData) {
     record.date = dateFns.toDate(record.date);

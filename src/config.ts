@@ -27,7 +27,7 @@ let config = {
       host: 'localhost',
       port: 0,
       name: 'expense_manager',
-      dialect: '', // 'mysql'|'sqlite'|'postgres'|'mssql'
+      dialect: '', // 'sqlite'|'postgres' ('mssql'|'mysql' not supported)
       username: '',
       password: '',
       seedOnStart: false
