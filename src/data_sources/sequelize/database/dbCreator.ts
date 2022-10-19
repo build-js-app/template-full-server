@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 
 import dbInit from './database';
 import seeder from './seeders/seederDev';
-import config from '../../../config';
+import config from 'config';
 
 export default {
   createDb

@@ -2,7 +2,7 @@ import * as dateFns from 'date-fns';
 import * as bcrypt from 'bcrypt-nodejs';
 import * as fs from 'fs-extra';
 
-import path from '../../../../helpers/pathHelper';
+import path from 'helpers/pathHelper';
 
 export default {
   seedData

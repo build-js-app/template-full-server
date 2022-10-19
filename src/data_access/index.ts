@@ -1,14 +1,14 @@
 import config from '../config';
 
-import categoryRepositoryMongo from '../data_sources/mongo/repositories/categoryRepository';
-import recordRepositoryMongo from '../data_sources/mongo/repositories/recordRepository';
-import userRepositoryMongo from '../data_sources/mongo/repositories/userRepository';
-import databaseMongo from '../data_sources/mongo/database/database';
+import categoryRepositoryMongo from 'data_sources/mongo/repositories/categoryRepository';
+import recordRepositoryMongo from 'data_sources/mongo/repositories/recordRepository';
+import userRepositoryMongo from 'data_sources/mongo/repositories/userRepository';
+import databaseMongo from 'data_sources/mongo/database/database';
 
-import categoryRepositorySequelize from '../data_sources/sequelize/repositories/categoryRepository';
-import recordRepositorySequelize from '../data_sources/sequelize/repositories/recordRepository';
-import userRepositorySequelize from '../data_sources/sequelize/repositories/userRepository';
-import databaseSequelize from '../data_sources/sequelize/database/database';
+import categoryRepositorySequelize from 'data_sources/sequelize/repositories/categoryRepository';
+import recordRepositorySequelize from 'data_sources/sequelize/repositories/recordRepository';
+import userRepositorySequelize from 'data_sources/sequelize/repositories/userRepository';
+import databaseSequelize from 'data_sources/sequelize/database/database';
 
 const mongoDataSource = {
   categoryRepository: categoryRepositoryMongo,

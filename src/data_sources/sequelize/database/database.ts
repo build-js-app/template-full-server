@@ -1,5 +1,5 @@
-import config from '../../../config';
-import pathHelper from '../../../helpers/pathHelper';
+import config from 'config';
+import pathHelper from 'helpers/pathHelper';
 import {Sequelize} from 'sequelize';
 const models = require('./models/index');
 

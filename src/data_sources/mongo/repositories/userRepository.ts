@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as crypto from 'crypto';
 
 import db from '../database/database';
-import AppError from '../../../appError';
+import AppError from 'appError';
 
 export default {
   getUserByEmail,

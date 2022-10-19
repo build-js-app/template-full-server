@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 
 import dbInit from '../database/database';
-import AppError from '../../../appError';
+import AppError from 'appError';
 
 export default {
   getUserByEmail,
