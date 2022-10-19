@@ -20,7 +20,14 @@ export function init(sequelize, DataTypes) {
     }
   };
 
-  const model = helper.defineModel('user', fields, sequelize);
+  const model = helper.defineModel('user', fields, sequelize, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['email']
+      }
+    ]
+  });
 
   model.associate = models => {
     model.hasMany(models.Record, {

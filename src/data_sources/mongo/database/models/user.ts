@@ -17,8 +17,7 @@ interface UserModelType extends Model<IUser> {
 const userSchema = new Schema<IUser, UserModelType>({
   email: {
     type: String,
-    required: true,
-    index: {unique: true}
+    required: true
   },
   profile: {
     local: {

@@ -17,12 +17,8 @@ function defineForeignKey(name) {
   };
 }
 
-function defineModel(name: string, fields, sequelize) {
-  const options = {
-    freezeTableName: true,
-    tableName: null
-  };
-
+function defineModel(name: string, fields, sequelize, options: any = {}) {
+  options.freezeTableName = true;
   options.tableName = getDbName(name);
 
   for (const fieldKey of Object.keys(fields)) {
