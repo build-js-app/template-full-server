@@ -21,7 +21,7 @@ export default {
   refreshResetToken
 };
 
-async function getUserByEmail(email) {
+async function getUserByEmail(email): Promise<UserDto> {
   const User = db.models.User;
 
   const user = await User.findOne({email});
@@ -29,7 +29,7 @@ async function getUserByEmail(email) {
   return mapUser(user);
 }
 
-async function getLocalUserByEmail(email: string) {
+async function getLocalUserByEmail(email: string): Promise<UserDto> {
   let user = await getUserByEmail(email);
 
   let noLocalProfile = !user || !user.profile.local;
@@ -39,7 +39,7 @@ async function getLocalUserByEmail(email: string) {
   return user;
 }
 
-async function saveLocalAccount(user, userData) {
+async function saveLocalAccount(user, userData): Promise<UserDto> {
   let User = db.models.User;
 
   let localProfile: any = {};
@@ -76,21 +76,19 @@ async function saveLocalAccount(user, userData) {
   return mapUser(result);
 }
 
-async function getUserById(id) {
-  const User = db.models.User;
-
-  const user = await User.findById(id);
+async function getUserById(id): Promise<UserDto> {
+  const user = await getUserModelById(id);
 
   return mapUser(user);
 }
 
-async function getUsers() {
+async function getUsers(): Promise<UserDto[]> {
   let User = db.models.User;
 
   return await User.find();
 }
 
-async function getUserByActivationToken(token: string) {
+async function getUserByActivationToken(token: string): Promise<UserDto> {
   const users = await getUsers();
 
   const findUser = _.find(users, (user: any) => {
@@ -100,8 +98,8 @@ async function getUserByActivationToken(token: string) {
   return mapUser(findUser);
 }
 
-async function refreshActivationToken(userId: number) {
-  let user = await getUserById(userId);
+async function refreshActivationToken(userId: string): Promise<UserDto> {
+  let user = await getUserModelById(userId);
 
   if (!user) throw new AppError('');
 
@@ -115,8 +113,8 @@ async function refreshActivationToken(userId: number) {
   return mapUser(result);
 }
 
-async function activateUser(userId: number) {
-  let user = await getUserById(userId);
+async function activateUser(userId: string): Promise<UserDto> {
+  let user = await getUserModelById(userId);
 
   if (!user) throw new AppError('User not found.');
 
@@ -128,8 +126,12 @@ async function activateUser(userId: number) {
   return mapUser(result);
 }
 
-async function updateUser(userData) {
-  let user = await getUserByEmail(userData.email.toLowerCase());
+async function updateUser(userData): Promise<UserDto> {
+  const email = userData.email.toLowerCase();
+
+  const User = db.models.User;
+
+  const user = await User.findOne({email});
 
   if (!user) return;
 
@@ -141,14 +143,14 @@ async function updateUser(userData) {
   return mapUser(result);
 }
 
-async function removeUser(id) {
+async function removeUser(id: string): Promise<void> {
   let User = db.models.User;
 
-  return await User.deleteOne({_id: id});
+  await User.deleteOne({_id: id});
 }
 
-async function resetPassword(userId) {
-  let user = await getUserById(userId);
+async function resetPassword(userId: string): Promise<UserDto> {
+  let user = await getUserModelById(userId);
 
   if (!user) throw new AppError('Cannot find user by Id');
 
@@ -162,10 +164,10 @@ async function resetPassword(userId) {
   return mapUser(result);
 }
 
-async function updateUserPassword(userId, password: string) {
+async function updateUserPassword(userId, password: string): Promise<UserDto> {
   const User = db.models.User;
 
-  let user = await getUserById(userId);
+  let user = await getUserModelById(userId);
 
   if (!user) throw new AppError('Cannot find user');
 
@@ -177,7 +179,7 @@ async function updateUserPassword(userId, password: string) {
   return mapUser(result);
 }
 
-async function getUserByResetToken(token: string) {
+async function getUserByResetToken(token: string): Promise<UserDto> {
   const users = await getUsers();
 
   const findUser = _.find(users, user => {
@@ -187,8 +189,8 @@ async function getUserByResetToken(token: string) {
   return mapUser(findUser);
 }
 
-async function refreshResetToken(userId) {
-  let user = await getUserById(userId);
+async function refreshResetToken(userId): Promise<UserDto> {
+  let user = await getUserModelById(userId);
 
   if (!user) throw new AppError('Cannot find user');
 
@@ -208,6 +210,14 @@ function generateActivationToken(): string {
 }
 
 //helper methods
+
+async function getUserModelById(id: string) {
+  const User = db.models.User;
+
+  const user = await User.findById(id);
+
+  return user;
+}
 
 function mapUser(user) {
   user._doc.id = user._id;

@@ -12,20 +12,31 @@ import userRepositorySequelize from 'data_sources/sequelize/repositories/userRep
 import databaseSequelize from 'data_sources/sequelize/database/database';
 import dbCreatorSequelize from 'data_sources/sequelize/database/dbCreator';
 
-const mongoDataSource = {
+interface DataSource {
+  categoryRepository: CategoryRepository;
+  recordRepository: RecordRepository;
+  userRepository: UserRepository;
+  connect: () => Promise<void>;
+  createDb: () => Promise<void>;
+}
+
+const mongoDataSource: DataSource = {
   categoryRepository: categoryRepositoryMongo,
   recordRepository: recordRepositoryMongo,
   userRepository: userRepositoryMongo,
   connect: databaseMongo.init,
-  dbCreator: dbCreatorMongo
+  createDb: dbCreatorMongo.createDb
 };
 
-const sequelizeDataSource = {
+const sequelizeDataSource: DataSource = {
   categoryRepository: categoryRepositorySequelize,
   recordRepository: recordRepositorySequelize,
   userRepository: userRepositorySequelize,
-  connect: databaseSequelize.init,
-  dbCreator: dbCreatorSequelize
+  connect: () => {
+    databaseSequelize.init();
+    return Promise.resolve();
+  },
+  createDb: dbCreatorSequelize.createDb
 };
 
 const dataSource = config.dataAccess.dataSource === 'mongo' ? mongoDataSource : sequelizeDataSource;

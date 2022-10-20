@@ -5,7 +5,6 @@ interface UserInstance extends Model {
   firstName: string;
   lastName: string;
   email: string;
-  dataValues: any;
   profile: any;
 }
 

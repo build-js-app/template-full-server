@@ -3,6 +3,8 @@ import * as crypto from 'crypto';
 import dbInit from '../database/database';
 import AppError from 'appError';
 
+import {UserInstance} from '../typings/models/UserModel';
+
 export default {
   getUserByEmail,
   getLocalUserByEmail,
@@ -24,17 +26,19 @@ const db = dbInit.init();
 
 const userModel = db.models.User;
 
-async function getUserByEmail(email) {
+async function getUserByEmail(email): Promise<UserDto> {
   const options = {
     where: {
       email
     }
   };
 
-  return await userModel.findOne(options);
+  const user = await userModel.findOne(options);
+
+  return mapUser(user);
 }
 
-async function getLocalUserByEmail(email: string) {
+async function getLocalUserByEmail(email: string): Promise<UserDto> {
   const user = await getUserByEmail(email);
 
   const noLocalProfile = !user || !user.profile.local;
@@ -44,7 +48,7 @@ async function getLocalUserByEmail(email: string) {
   return user;
 }
 
-async function saveLocalAccount(user, userData) {
+async function saveLocalAccount(user, userData): Promise<UserDto> {
   const localProfile: any = {};
 
   localProfile.firstName = userData.firstName;
@@ -60,31 +64,37 @@ async function saveLocalAccount(user, userData) {
 
   localProfile.isActivated = false;
 
+  let result = null;
+
   if (user) {
     user.email = userData.email;
 
     user.set('profile', {local: localProfile});
 
-    return await user.save();
+    result = await user.save();
   } else {
-    return await userModel.create({
+    result = await userModel.create({
       email: userData.email,
       profile: {
         local: localProfile
       }
     });
   }
+
+  return mapUser(result);
 }
 
-async function getUserById(id) {
-  return await userModel.findByPk(id);
+async function getUserById(id: string): Promise<UserDto> {
+  const result = await userModel.findByPk(id);
+  return mapUser(result);
 }
 
-async function getUsers() {
-  return await userModel.findAll();
+async function getUsers(): Promise<UserDto[]> {
+  const userModels = await userModel.findAll();
+  return userModels.map(u => mapUser(u));
 }
 
-async function getUserByActivationToken(token: string) {
+async function getUserByActivationToken(token: string): Promise<UserDto> {
   const users = await getUsers();
 
   const findUser = users.find(user => {
@@ -94,70 +104,75 @@ async function getUserByActivationToken(token: string) {
   return findUser;
 }
 
-async function refreshActivationToken(userId: number) {
-  const user = await getUserById(userId);
+async function refreshActivationToken(userId: string): Promise<UserDto> {
+  const userModel = await getUserModelById(userId);
 
-  if (!user) throw new AppError('');
+  if (!userModel) throw new AppError('');
 
-  user.set('profile.local.activation.token', generateActivationToken());
-  user.set('profile.local.activation.created', new Date().toString());
+  userModel.set('profile.local.activation.token', generateActivationToken());
+  userModel.set('profile.local.activation.created', new Date().toString());
 
-  return await user.save();
+  const result = await userModel.save();
+  return mapUser(result);
 }
 
-async function activateUser(userId: number) {
-  const user = await getUserById(userId);
+async function activateUser(userId: string): Promise<UserDto> {
+  const userModel = await getUserModelById(userId);
 
-  if (!user) throw new AppError('User not found.');
+  if (!userModel) throw new AppError('User not found.');
 
-  user.set('profile.local.activation', undefined);
-  user.set('profile.local.isActivated', true);
+  userModel.set('profile.local.activation', undefined);
+  userModel.set('profile.local.isActivated', true);
 
-  return await user.save();
+  const result = await userModel.save();
+  return mapUser(result);
 }
 
-async function updateUser(userData) {
-  const user = await getUserByEmail(userData.email.toLowerCase());
+async function updateUser(userData): Promise<UserDto> {
+  const userModel = await getUserModelByEmail(userData.email.toLowerCase());
 
-  if (!user) throw new AppError('Cannot find user by Id');
+  if (!userModel) throw new AppError('Cannot find user by Id');
 
-  user.firstName = userData.firstName;
-  user.lastName = userData.lastName;
+  userModel.firstName = userData.firstName;
+  userModel.lastName = userData.lastName;
 
-  return await user.save();
+  const result = await userModel.save();
+  return mapUser(result);
 }
 
-async function removeUser(id) {
-  const user = await getUserById(id);
+async function removeUser(id): Promise<void> {
+  const userModel = await getUserModelById(id);
 
-  if (!user) throw new AppError('Cannot find user by Id');
+  if (!userModel) throw new AppError('Cannot find user by Id');
 
-  return await user.destroy();
+  await userModel.destroy();
 }
 
-async function resetPassword(userId) {
-  const user = await getUserById(userId);
+async function resetPassword(userId): Promise<UserDto> {
+  const userModel = await getUserModelById(userId);
 
-  if (!user) throw new AppError('Cannot find user by Id');
+  if (!userModel) throw new AppError('Cannot find user by Id');
 
-  user.set('profile.local.reset.token', generateActivationToken());
-  user.set('profile.local.reset.created', new Date().toString());
+  userModel.set('profile.local.reset.token', generateActivationToken());
+  userModel.set('profile.local.reset.created', new Date().toString());
 
-  return await user.save();
+  const result = await userModel.save();
+  return mapUser(result);
 }
 
-async function updateUserPassword(userId, password: string) {
-  const user = await getUserById(userId);
+async function updateUserPassword(userId, password: string): Promise<UserDto> {
+  const userModel = await getUserModelById(userId);
 
-  if (!user) throw new AppError('Cannot find user');
+  if (!userModel) throw new AppError('Cannot find user');
 
-  user.set('profile.local.reset', undefined);
-  user.set('profile.local.password', (userModel as any).generateHash(password));
+  userModel.set('profile.local.reset', undefined);
+  userModel.set('profile.local.password', (userModel as any).generateHash(password));
 
-  return await user.save();
+  const result = await userModel.save();
+  return mapUser(result);
 }
 
-async function getUserByResetToken(token: string) {
+async function getUserByResetToken(token: string): Promise<UserDto> {
   const users = await getUsers();
 
   const findUser = users.find(user => {
@@ -168,18 +183,49 @@ async function getUserByResetToken(token: string) {
   return findUser;
 }
 
-async function refreshResetToken(userId) {
-  const user = await getUserById(userId);
+async function refreshResetToken(userId): Promise<UserDto> {
+  const userModel = await getUserModelById(userId);
 
-  if (!user) throw new AppError('Cannot find user');
+  if (!userModel) throw new AppError('Cannot find user');
 
-  user.set('profile.local.reset.token', generateActivationToken());
-  user.set('profile.local.reset.created', new Date().toString());
+  userModel.set('profile.local.reset.token', generateActivationToken());
+  userModel.set('profile.local.reset.created', new Date().toString());
 
-  return await user.save();
+  const result = await userModel.save();
+  return mapUser(result);
 }
 
 function generateActivationToken(): string {
   const token = crypto.randomBytes(32).toString('hex');
   return token;
+}
+
+//helper methods
+
+async function getUserModelById(id): Promise<UserInstance> {
+  return await userModel.findByPk(id);
+}
+
+async function getUserModelByEmail(email): Promise<UserInstance> {
+  const options = {
+    where: {
+      email
+    }
+  };
+
+  return await userModel.findOne(options);
+}
+
+function mapUser(userModel: UserInstance): UserDto {
+  if (!userModel) return null;
+
+  const record: UserDto = {
+    id: userModel.id.toString(),
+    firstName: userModel.firstName,
+    lastName: userModel.lastName,
+    email: userModel.email,
+    profile: userModel.profile
+  };
+
+  return record;
 }

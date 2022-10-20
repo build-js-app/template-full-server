@@ -6,7 +6,6 @@ interface IUser extends Document {
   firstName: string;
   lastName: string;
   email: string;
-  dataValues: any;
   profile: any;
 }
 

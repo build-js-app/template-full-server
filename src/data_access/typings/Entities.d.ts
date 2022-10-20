@@ -13,3 +13,10 @@ interface RecordDto {
   categoryId: string;
   userId: string;
 }
+interface UserDto {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  profile: any;
+}
