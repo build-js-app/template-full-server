@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "build/src",
+    "rootDir": "src",
+    "baseUrl": "./src",
+    "allowUnreachableCode": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "typeRoots": [
+      "./typings/typings.d.ts",
+      "../node_modules/@types"
+    ],
+  },
+  "exclude": ["node_modules", "build"]
+}

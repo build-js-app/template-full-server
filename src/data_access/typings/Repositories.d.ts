@@ -1,6 +1,6 @@
 interface CategoryRepository {
   getCategoryById(id: string): Promise<CategoryDto>;
-  getCategories(userId: string): Promise<Categories[]>;
+  getCategories(userId: string): Promise<CategoryDto[]>;
   addCategory(userId: string, categoryData: Partial<CategoryDto>): Promise<CategoryDto>;
   updateCategory(categoryData: CategoryDto): Promise<CategoryDto>;
   removeCategory(id: string): Promise<void>;
