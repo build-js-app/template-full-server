@@ -220,6 +220,8 @@ async function getUserModelById(id: string) {
 }
 
 function mapUser(user) {
+  if (!user) return null;
+
   user._doc.id = user._id;
 
   return user;

@@ -82,6 +82,8 @@ async function getRecordsByCategoryId(categoryId: string): Promise<RecordDto[]> 
 //helper methods
 
 function mapRecord(record: any): RecordDto {
+  if (!record) return null;
+
   record._doc.id = record._id;
 
   return record as RecordDto;

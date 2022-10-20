@@ -64,6 +64,8 @@ async function removeCategory(id: string): Promise<void> {
 //helper methods
 
 function mapCategory(categoryModel): CategoryDto {
+  if (!categoryModel) return null;
+
   const category: CategoryDto = {
     id: categoryModel._id.valueOf(),
     title: categoryModel.title,
