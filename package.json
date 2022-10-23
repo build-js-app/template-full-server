@@ -22,12 +22,6 @@
       "/build/"
     ]
   },
-  "prettier": {
-    "printWidth": 120,
-    "singleQuote": true,
-    "jsxBracketSameLine": true,
-    "bracketSpacing": false
-  },
   "dependencies": {
     "@types/fs-extra": "9.0.13",
     "@types/jest": "^29.2.0",
