@@ -10,8 +10,7 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "typeRoots": [
-      "./typings/typings.d.ts",
-      "../node_modules/@types"
+      "./node_modules/@types"
     ],
   },
   "exclude": ["node_modules", "build"]
